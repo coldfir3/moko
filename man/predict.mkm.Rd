@@ -8,9 +8,12 @@
 predict.mkm(object, newdata, modelcontrol = NULL)
 }
 \arguments{
-\item{object}{an object of class mpre}
+\item{object}{An object of class \code{mkm}}
 
 \item{newdata}{ a vector, matrix or data frame containing the points where to perform predictions. }
+
+\item{modelcontrol}{An optional list of control parameters to the
+\code{mkm} function (default: \code{model@control}).}
 }
 \description{
 This functions performs predictions for a given dataset into a collection

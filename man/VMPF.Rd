@@ -8,48 +8,49 @@ VMPF(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d),
   quiet = TRUE, control = NULL, modelcontrol = NULL)
 }
 \arguments{
-\item{model}{an object of class \code{mkm},}
+\item{model}{An object of class \code{\link{mkm}},}
 
-\item{fun}{the multi-objective and constraint cost function to be optimized. This
-function must return a vector with the size of \code{model@m + model@j} where
-\code{model@m} are the number of objectives and \code{model@j} the number of the
-constraints,}
+\item{fun}{The multi-objective and constraint cost function to be optimized.
+This function must return a vector with the size of \code{model@m +
+model@j} where \code{model@m} are the number of objectives and
+\code{model@j} the number of the constraints,}
 
-\item{lower}{vector of lower bounds for the variables to be optimized over
+\item{lower}{Vector of lower bounds for the variables to be optimized over
 (default: 0 with length \code{model@d}),}
 
-\item{upper}{vector of upper bounds for the variables to be optimized over
+\item{upper}{Vector of upper bounds for the variables to be optimized over
 (default: 1 with length \code{model@d}),}
 
-\item{quiet}{logic indicating the verbosity of the routine}
+\item{quiet}{Logical indicating the verbosity of the routine,}
 
-\item{control}{an optional list of control parameters that controlls the
-optimization algorithm. One can control
+\item{control}{An optional list of control parameters that controlls the
+  optimization algorithm. One can control:
 
-"\code{popsize}" (default: \code{200})
+  "\code{popsize}" (default: \code{200});
 
-"\code{generations}" (default: \code{30})
+  "\code{generations}" (default: \code{30});
 
-"\code{cdist}" (default: \code{1/model@d})
+  "\code{cdist}" (default: \code{1/model@d});
 
-"\code{mprob}" (default: \code{15})
+  "\code{mprob}" (default: \code{15});
 
-"\code{mdist}" (defult: \code{20})}
+  "\code{mdist}" (defult: \code{20}),}
 
-\item{modelcontrol}{list optional list of control parameters to the \code{mkm} function
-(default: \code{model@control})}
+\item{modelcontrol}{An optional list of control parameters to the
+\code{mkm} function (default: \code{model@control}).}
 }
 \value{
 an updated object of class \code{mkm}.
 }
 \description{
-Executes \code{nsteps} iterations of the VMPF algorithm to an object of class \code{mkm}.
-At each step, a multi-objective kriging model is re-estimated (including covariance pa
-rameters re-estimation).
+Executes \code{nsteps} iterations of the VMPF algorithm to an object of class
+\code{mkm}. At each step, a multi-objective kriging model is re-estimated
+(including covariance pa rameters re-estimation).
 }
 \details{
-The infill point is sampled from the most uncertain design of a predicted Pareto set.
-This set is predicted using nsga-2 algorithm and the mean value of the mkm predictor.
+The infill point is sampled from the most uncertain design of a predicted
+Pareto set. This set is predicted using nsga-2 algorithm and the mean value
+of the mkm predictor.
 }
 \examples{
 # ----------------

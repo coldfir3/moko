@@ -1,8 +1,32 @@
 devtools::use_package("mco")
-#' Title
+#' Creates a predicted pareto front using nsga-ii algorithm
 #'
-#' Description
+#' This function creates a predicted pareto front based on the mean of Kriging
+#' models. The predicted mean of each objective and constraint is passed to the
+#' nsga-ii algorithm.
 #'
+#' Details
+#'
+#' @param model Object of class \code{\link{mkm}}
+#' @param lower Vector of lower bounds for the variables to be optimized over
+#'   (default: 0 with length \code{model@d}),
+#' @param upper Vector of upper bounds for the variables to be optimized over
+#'   (default: 1 with length \code{model@d}),
+#' @param control An optional list of control parameters that controlls the
+#'   optimization algorithm. One can control:
+#'
+#'   "\code{popsize}" (default: \code{200});
+#'
+#'   "\code{generations}" (default: \code{30});
+#'
+#'   "\code{cdist}" (default: \code{1/model@d});
+#'
+#'   "\code{mprob}" (default: \code{15});
+#'
+#'   "\code{mdist}" (defult: \code{20}),
+#' @inheritParams predict.mkm
+#'
+#' @return object of class \code{\link{ps}} containing the predicted Pareto front
 #'
 #' @export
 #' @examples
@@ -56,7 +80,7 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
   }
   else
     cfn <- function(x) return(1)
-  pf <- mco::nsga2(fn, idim, odim,
+  res <- mco::nsga2(fn, idim, odim,
               constraints = cfn,
               cdim = cdim,
               lower.bounds = lower,
@@ -69,42 +93,31 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
               mdist = control$mdist,
               vectorized = TRUE
               )
-  return(mco2ps(pf))
+  return(mco2ps(res))
 }
 
 #' VMPF: Variance Minimization of the Predicted Front
 #'
-#' Executes \code{nsteps} iterations of the VMPF algorithm to an object of class \code{mkm}.
-#' At each step, a multi-objective kriging model is re-estimated (including covariance pa
-#' rameters re-estimation).
+#' Executes \code{nsteps} iterations of the VMPF algorithm to an object of class
+#' \code{mkm}. At each step, a multi-objective kriging model is re-estimated
+#' (including covariance pa rameters re-estimation).
 #'
-#' The infill point is sampled from the most uncertain design of a predicted Pareto set.
-#' This set is predicted using nsga-2 algorithm and the mean value of the mkm predictor.
+#' The infill point is sampled from the most uncertain design of a predicted
+#' Pareto set. This set is predicted using nsga-2 algorithm and the mean value
+#' of the mkm predictor.
 #'
-#' @param model an object of class \code{mkm},
-#' @param fun the multi-objective and constraint cost function to be optimized. This
-#' function must return a vector with the size of \code{model@m + model@j} where
-#' \code{model@m} are the number of objectives and \code{model@j} the number of the
-#' constraints,
-#' @param lower vector of lower bounds for the variables to be optimized over
-#' (default: 0 with length \code{model@d}),
-#' @param upper vector of upper bounds for the variables to be optimized over
-#' (default: 1 with length \code{model@d}),
-#' @param quiet logic indicating the verbosity of the routine
-#' @param control an optional list of control parameters that controlls the
-#' optimization algorithm. One can control:
+#' @param model An object of class \code{\link{mkm}},
+#' @param fun The multi-objective and constraint cost function to be optimized.
+#'   This function must return a vector with the size of \code{model@m +
+#'   model@j} where \code{model@m} are the number of objectives and
+#'   \code{model@j} the number of the constraints,
+#' @param lower Vector of lower bounds for the variables to be optimized over
+#'   (default: 0 with length \code{model@d}),
+#' @param upper Vector of upper bounds for the variables to be optimized over
+#'   (default: 1 with length \code{model@d}),
+#' @param quiet Logical indicating the verbosity of the routine,
+#' @inheritParams predict_front
 #'
-#' "\code{popsize}" (default: \code{200})
-#'
-#' "\code{generations}" (default: \code{30})
-#'
-#' "\code{cdist}" (default: \code{1/model@d})
-#'
-#' "\code{mprob}" (default: \code{15})
-#'
-#' "\code{mdist}" (defult: \code{20})
-#' @param modelcontrol list optional list of control parameters to the \code{mkm} function
-#' (default: \code{model@control})
 #' @return an updated object of class \code{mkm}.
 #'
 #' @export

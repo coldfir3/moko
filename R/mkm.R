@@ -1,5 +1,21 @@
 devtools::use_package("DiceKriging")
 
+
+#' An S4 class of multiple Kriging models
+#'
+#' @slot km A list of \code{\link{km}} objectives.
+#' @slot objective A Numeric vector representing the index of the objective
+#'   models in \code{km}.
+#' @slot design Numeric data.frame of the designs (decision space).
+#' @slot d,n,m,j Numeric values for the number of dimensions, designs,
+#'   objectives and constraints, respectively.
+#' @slot response Numeric data.frame of the observed responses (objectives and
+#'   constraints) at each design point.
+#' @slot feasible Logical vector stating which designs are feasible.
+#' @slot control A list of controls for function backtracking, this list
+#'   contains all the input parameters that are passed to the \code{\link{km}}
+#'   function.
+#'
 #' @export
 setClass('mkm', representation(
   km = 'list',
@@ -9,25 +25,42 @@ setClass('mkm', representation(
   n = 'numeric',
   m = 'numeric',
   j = 'numeric',
-#  sd = 'numeric',
   response = 'data.frame',
-#  norm_response = 'data.frame',
   feasible = 'logical',
   control = 'list'
   )
 )
 
-#' Multiobjective Kriging model
+#' Multi-objective Kriging model
 #'
-#' This function creates a multiobjective kriging model. It is based on the \code{\link{km}}
-#'  function of the \code{\link{DiceKriging}} package and creates a structured list of
-#'  \code{\link{km}} objects.
+#' This function creates a multi-objective kriging model. It is based on the
+#' \code{\link{km}} function of the \code{\link{DiceKriging}} package and
+#' creates a structured list of \code{km} objects.
 #'
-#' @param quiet logical indicating if the \code{print} commands inside \code{km} should be ommited
-#' @param modelcontrol list of parameters passed to \code{\link{km}}.
+#' @param modelcontrol A list of control parameters passed to the
+#'   \code{\link{km}} function. One can control:
+#'   \describe{
+#'   \item{\code{objective}}{default: \code{1:ncol(response)}}
+#'   \item{\code{quiet}}{default: \code{TRUE}}
+#'   \item{\code{formula}}{default: \code{~1}}
+#'   \item{\code{covtype}}{default: \code{"matern5_2"}}
+#'   \item{\code{nugget.estim}}{default: \code{FALSE}}
+#'   \item{\code{estim.method}}{default: \code{"MLE"}}
+#'   \item{\code{optim.method}}{default: \code{"BFGS"}}
+#'   \item{\code{multistart}}{default: \code{1}}
+#'   \item{\code{gr}}{default: \code{TRUE}}
+#'   \item{\code{iso}}{default: \code{FALSE}}
+#'   \item{\code{scaling}}{default: \code{FALSE}}
+#'   \item{\code{type}}{default: \code{'UK'}}
+#'   \item{\code{se.compute}}{default: \code{TRUE}}
+#'   \item{\code{light.return}}{default: \code{TRUE}}
+#'   \item{\code{bias.correct}}{default: \code{FALSE}}
+#'   \item{\code{checkNames}}{default: \code{FALSE}}
+#'   }
+#'   For more details, one can check \code{\link{km}}.
 #' @inheritParams DiceKriging::km
-#' @return S4 class object that contains a list of \code{\link{km}} objects and also
-#'  some usefull design data
+#'
+#' @return S4 An object of class \code{\link{mkm-class}}
 #' @export
 #' @examples
 #' # ------------------------
@@ -139,8 +172,6 @@ mkm <- function(design, response, modelcontrol = NULL){
   model@n <- nrow(model@design)
   model@m <- length(model@objective)
   model@j <- length(model@km) - model@m
-#  model@sd <- (do.call(c,lapply(model@km, function(model) model@covariance@sd2)))^0.5
-#  model@norm_response <- normalize(response)
   if(model@j == 0)
     model@feasible <- rep(TRUE, model@n)
   else
@@ -159,8 +190,10 @@ setMethod("show", signature(object = "mkm"), function(object)
 #' This functions performs predictions for a given dataset into a collection
 #' of Kriging models (mkm object)
 #'
+#' @param object An object of class \code{mkm}
+#' @param modelcontrol An optional list of control parameters to the
+#'   \code{mkm} function (default: \code{model@control}).
 #' @inheritParams DiceKriging::predict
-#' @param object an object of class mpre
 #'
 #' @aliases predict
 #'

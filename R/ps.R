@@ -33,34 +33,3 @@ ps <- function(y, minimization=TRUE, light.return=FALSE){
   class(ps) <- 'ps'
   return(ps)
 }
-
-if(F){
-devtools::use_package("utils")
-#' returns the head of the pareto set
-#'
-#' Description
-#'
-#' @export
-#' @inheritParams utils::head
-#' @examples
-#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
-#' head(aps)
-#'
-head.ps <- function(x, n = 6L, ...){
-  head.matrix(x$set, n, ...)
-}
-
-#' returns the tail of the pareto set
-#'
-#' Description
-#'
-#' @export
-#' @inheritParams utils::head
-#' @examples
-#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
-#' tail(aps)
-#'
-tail.ps <- function(x, n = 6L, addrownums = TRUE, ...){
-  tail.matrix(x$set, n, addrownums, ...)
-}
-}

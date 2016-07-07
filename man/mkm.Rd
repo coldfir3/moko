@@ -2,7 +2,7 @@
 % Please edit documentation in R/mkm.R
 \name{mkm}
 \alias{mkm}
-\title{Multiobjective Kriging model}
+\title{Multi-objective Kriging model}
 \usage{
 mkm(design, response, modelcontrol = NULL)
 }
@@ -11,18 +11,35 @@ mkm(design, response, modelcontrol = NULL)
 
 \item{response}{ a vector (or 1-column matrix or data frame) containing the values of the 1-dimensional output given by the objective function at the \code{design} points. }
 
-\item{modelcontrol}{list of parameters passed to \code{\link{km}}.}
-
-\item{quiet}{logical indicating if the \code{print} commands inside \code{km} should be ommited}
+\item{modelcontrol}{A list of control parameters passed to the
+\code{\link{km}} function. One can control:
+\describe{
+\item{\code{objective}}{default: \code{1:ncol(response)}}
+\item{\code{quiet}}{default: \code{TRUE}}
+\item{\code{formula}}{default: \code{~1}}
+\item{\code{covtype}}{default: \code{"matern5_2"}}
+\item{\code{nugget.estim}}{default: \code{FALSE}}
+\item{\code{estim.method}}{default: \code{"MLE"}}
+\item{\code{optim.method}}{default: \code{"BFGS"}}
+\item{\code{multistart}}{default: \code{1}}
+\item{\code{gr}}{default: \code{TRUE}}
+\item{\code{iso}}{default: \code{FALSE}}
+\item{\code{scaling}}{default: \code{FALSE}}
+\item{\code{type}}{default: \code{'UK'}}
+\item{\code{se.compute}}{default: \code{TRUE}}
+\item{\code{light.return}}{default: \code{TRUE}}
+\item{\code{bias.correct}}{default: \code{FALSE}}
+\item{\code{checkNames}}{default: \code{FALSE}}
+}
+For more details, one can check \code{\link{km}}.}
 }
 \value{
-S4 class object that contains a list of \code{\link{km}} objects and also
- some usefull design data
+S4 An object of class \code{\link{mkm-class}}
 }
 \description{
-This function creates a multiobjective kriging model. It is based on the \code{\link{km}}
- function of the \code{\link{DiceKriging}} package and creates a structured list of
- \code{\link{km}} objects.
+This function creates a multi-objective kriging model. It is based on the
+\code{\link{km}} function of the \code{\link{DiceKriging}} package and
+creates a structured list of \code{km} objects.
 }
 \examples{
 # ------------------------

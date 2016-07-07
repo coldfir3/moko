@@ -2,12 +2,45 @@
 % Please edit documentation in R/optim_vmpf.R
 \name{predict_front}
 \alias{predict_front}
-\title{Title}
+\title{Creates a predicted pareto front using nsga-ii algorithm}
 \usage{
 predict_front(model, lower, upper, control = NULL, modelcontrol = NULL)
 }
+\arguments{
+\item{model}{Object of class \code{\link{mkm}}}
+
+\item{lower}{Vector of lower bounds for the variables to be optimized over
+(default: 0 with length \code{model@d}),}
+
+\item{upper}{Vector of upper bounds for the variables to be optimized over
+(default: 1 with length \code{model@d}),}
+
+\item{control}{An optional list of control parameters that controlls the
+  optimization algorithm. One can control:
+
+  "\code{popsize}" (default: \code{200});
+
+  "\code{generations}" (default: \code{30});
+
+  "\code{cdist}" (default: \code{1/model@d});
+
+  "\code{mprob}" (default: \code{15});
+
+  "\code{mdist}" (defult: \code{20}),}
+
+\item{modelcontrol}{An optional list of control parameters to the
+\code{mkm} function (default: \code{model@control}).}
+}
+\value{
+object of class \code{\link{ps}} containing the predicted Pareto front
+}
 \description{
-Description
+This function creates a predicted pareto front based on the mean of Kriging
+models. The predicted mean of each objective and constraint is passed to the
+nsga-ii algorithm.
+}
+\details{
+Details
 }
 \examples{
 # ------------------------
