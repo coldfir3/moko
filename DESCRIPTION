@@ -1,0 +1,18 @@
+Package: moko
+Type: Package
+Title: MOKO: Multi-Objective Kriging Optimization
+Version: 0.0.0.9000
+Authors@R: person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre"))
+Description: The package moko provides the user with methods for
+  constrained and unconstraiend multiobjective optimization. Those
+  methods are all based on the Kriging surogate modeling technique.
+License: GPL-3
+LazyData: TRUE
+Imports:
+    DiceKriging (>= 1.5.5),
+    DiceOptim (>= 1.5),
+    GenSA (>= 1.1.6),
+    emoa (>= 0.5.0),
+    mco (>= 1.0.15.1),
+    GPareto (>= 1.0.2)
+RoxygenNote: 5.0.1

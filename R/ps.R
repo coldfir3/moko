@@ -1,0 +1,66 @@
+#' @export
+setClass("ps")
+
+devtools::use_package("emoa")
+#' Creates a pareto set from given data
+#'
+#' Description
+#'
+#' @param y design space data
+#' @param minimization logical representing if the set is to be minimized or not
+#' @param light.return logical indicating if the indexes should be writen on the 'ps' object
+#' @return S3 class object that contains information of the pareto set
+#' @export
+#' @examples
+#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
+#' plot(aps)
+#'
+ps <- function(y, minimization=TRUE, light.return=FALSE){
+  y <- t(y)
+  if (minimization)
+    set <- t(emoa::nondominated_points(y))
+  else
+    set <- t(-emoa::nondominated_points(-y))
+  n <- nrow(set)
+  m <- ncol(set)
+  colnames(set) <- paste0('f',1:m)
+  if (light.return)
+    ps <- list(set=set, index=NULL, m=m, n=n)
+  else {
+    index <- which(apply(matrix(t(y) %in% set, ncol=ncol(set)),1,all))
+    ps <- list(set=set,index=index,m=m,n=n)
+  }
+  class(ps) <- 'ps'
+  return(ps)
+}
+
+if(F){
+devtools::use_package("utils")
+#' returns the head of the pareto set
+#'
+#' Description
+#'
+#' @export
+#' @inheritParams utils::head
+#' @examples
+#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
+#' head(aps)
+#'
+head.ps <- function(x, n = 6L, ...){
+  head.matrix(x$set, n, ...)
+}
+
+#' returns the tail of the pareto set
+#'
+#' Description
+#'
+#' @export
+#' @inheritParams utils::head
+#' @examples
+#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
+#' tail(aps)
+#'
+tail.ps <- function(x, n = 6L, addrownums = TRUE, ...){
+  tail.matrix(x$set, n, addrownums, ...)
+}
+}
