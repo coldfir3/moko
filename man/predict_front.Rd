@@ -29,7 +29,7 @@ predict_front(model, lower, upper, control = NULL, modelcontrol = NULL)
   "\code{mdist}" (defult: \code{20}),}
 
 \item{modelcontrol}{An optional list of control parameters to the
-\code{mkm} function (default: \code{model@control}).}
+\code{mkm} function (default: \code{object@control}).}
 }
 \value{
 object of class \code{\link{ps}} containing the predicted Pareto front

@@ -138,9 +138,13 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
   return(res[c('value','par')])
 }
 
-#' Title
+#' MEGO: Multi-Objective Efficient Global Optimization Algorithm
 #'
-#' Description
+#' Executes \code{nsteps} iterations of the MEGO method to an object of class
+#' \link{\code{mkm}}. At each step, a weighted kriging model is re-estimated (including
+#' covariance parameters re-estimation) based on the initial design points plus
+#' the points visited during all previous iterations; then a new point is
+#' obtained by maximizing the Expected Improvement criterion (EI).
 #'
 #' @export
 #' @examples
@@ -155,7 +159,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- pEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
+#' model <- MEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -169,7 +173,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- pEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
+#' model <- MEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -A, upper.bounds = A)$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -182,7 +186,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- 15 * replicate(d,sample(0:n,n))/n - 5
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- pEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
+#' model <- MEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -195,7 +199,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- pEGO(model, fun, 80, quiet = FALSE)
+#' model <- MEGO(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
 #' rgl::plot3d(ps(model@response)$set)
 #' # ----------------
@@ -207,7 +211,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objectives = 1:2))
-#' model <- pEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
+#' model <- MEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
 #' fun <- function(x) Binh(x)[c(1,2)]
 #' gfun <- function(x) -Binh(x)[-c(1,2)]
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(5,3),
@@ -223,7 +227,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.05,d)))
-#' model <- pEGO(model, fun, 80, quiet = FALSE)
+#' model <- MEGO(model, fun, 80, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #' fun <- function(x) nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))[c(1,2)]
 #' gfun <- function(x) -nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))[-c(1,2)]
@@ -241,7 +245,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower = rep(0.1,d)))
-#' model <- pEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+#' model <- MEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #'
 #' #### SOME single objective optimization
@@ -255,7 +259,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- DiceKriging::branin
 #' res <- apply(doe, 1, fun)
 #' model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d)))
-#' model <- pEGO(model, fun, 20, quiet = FALSE)
+#' model <- MEGO(model, fun, 20, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------
 #' # Branin-Hoo function (simple constraint)
@@ -268,7 +272,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=rep(0.1,d)))
-#' model <- pEGO(model, fun, 10, quiet = FALSE)
+#' model <- MEGO(model, fun, 10, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------
 #' # Branin-Hoo function (narrow constraint)
@@ -287,7 +291,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=rep(0.1,d)))
-#' model <- pEGO(model, fun, 10, quiet = FALSE)
+#' model <- MEGO(model, fun, 10, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------------
 #' # Branin-Hoo function (discontinuos constraint)
@@ -307,9 +311,9 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
-#' model <- pEGO(model, fun, 20, quiet = FALSE)
+#' model <- MEGO(model, fun, 20, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
-pEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
+MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
                  control = NULL, optimcontrol = list(max.time = 2)){
   time <- proc.time()
   if (class(model) != 'mkm')

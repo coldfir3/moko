@@ -111,6 +111,7 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
 #'   This function must return a vector with the size of \code{model@m +
 #'   model@j} where \code{model@m} are the number of objectives and
 #'   \code{model@j} the number of the constraints,
+#' @param nsteps An integer representing the desired number of iterations,
 #' @param lower Vector of lower bounds for the variables to be optimized over
 #'   (default: 0 with length \code{model@d}),
 #' @param upper Vector of upper bounds for the variables to be optimized over

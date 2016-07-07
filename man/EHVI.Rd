@@ -2,25 +2,39 @@
 % Please edit documentation in R/optim_hego.R
 \name{EHVI}
 \alias{EHVI}
-\title{Title}
+\title{EHVI: Constrained Expected Hypervolume Improvement}
 \usage{
 EHVI(x, model, control = NULL)
 }
 \arguments{
-\item{x}{a vector representing the input for which one wishes to calculate EHI}
+\item{x}{a vector representing the input for which one wishes to calculate \code{EHI},}
 
-\item{model}{object of class \code{mkm} containing the objectives and constrains}
+\item{model}{An object of class \code{\link{mkm}}.}
 
-\item{paretoFront}{optional object of class \code{ps} containing the actual Pareto set}
-
-\item{minimization}{logical indicating if the EHVI is minimizing all objectives
-(\code{TRUE} by default) or maximizing all objectives (\code{FALSE})}
+\item{control}{An optional list of control parameters, some of them passed to
+the \code{\link{crit_EHI}} function. One can control:
+\describe{
+\item{\code{minimization}}{logical indicating if the EHVI is minimizing
+all objectives (\code{TRUE}, by default) or maximizing all objectives
+(\code{FALSE}). Mixed information not currently accepted, if the user needs
+so, it should invert the functions prior Kriging modeling}
+\item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+the actual Pareto set. If not provided a Pareto set is built based
+ on the current observations of \code{model}.}
+\item{\code{nb.samp}}{default: 50}
+\item{\code{seed}}{default: 42}
+\item{\code{refPoint}}{default: \code{min} or \code{max} values for the Pareto
+ front for each objective}
+}}
 }
 \value{
 The Constrained Expected Hypervolume Improvement at \code{x}.
 }
 \description{
-Description
+Multi-objective Expected Hypervolume Improvement with respect to the current
+Pareto front. It's based on the \code{\link{crit_EHI}} function of the
+\code{\link{GPareto}} package. However, the present implementation accounts
+for inequalty constrains embeded into a \code{mkm} model.
 }
 \examples{
 # ------------------------

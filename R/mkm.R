@@ -37,7 +37,10 @@ setClass('mkm', representation(
 #' \code{\link{km}} function of the \code{\link{DiceKriging}} package and
 #' creates a structured list of \code{km} objects.
 #'
-#' @param modelcontrol A list of control parameters passed to the
+#' @param design Numeric data.frame of the designs (decision space)
+#' @param response Numeric data.frame of the observed responses (objectives and
+#'   constraints) at each design point.
+#' @param modelcontrol An optional list of control parameters passed to the
 #'   \code{\link{km}} function. One can control:
 #'   \describe{
 #'   \item{\code{objective}}{default: \code{1:ncol(response)}}
@@ -58,9 +61,9 @@ setClass('mkm', representation(
 #'   \item{\code{checkNames}}{default: \code{FALSE}}
 #'   }
 #'   For more details, one can check \code{\link{km}}.
-#' @inheritParams DiceKriging::km
 #'
 #' @return S4 An object of class \code{\link{mkm-class}}
+#'
 #' @export
 #' @examples
 #' # ------------------------
@@ -188,11 +191,11 @@ setMethod("show", signature(object = "mkm"), function(object)
 #' Predictor for a multiobjective Kriging model
 #'
 #' This functions performs predictions for a given dataset into a collection
-#' of Kriging models (mkm object)
+#' of Kriging models (\code{\link{mkm}} object)
 #'
-#' @param object An object of class \code{mkm}
+#' @param object An object of class \code{\link{mkm}}
 #' @param modelcontrol An optional list of control parameters to the
-#'   \code{mkm} function (default: \code{model@control}).
+#'   \code{mkm} function (default: \code{object@control}).
 #' @inheritParams DiceKriging::predict
 #'
 #' @aliases predict

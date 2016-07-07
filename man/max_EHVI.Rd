@@ -2,70 +2,52 @@
 % Please edit documentation in R/optim_hego.R
 \name{max_EHVI}
 \alias{max_EHVI}
-\title{Title}
+\title{max_EHVI: Maximization of the Expected Hypervolume Improvement criterion}
 \usage{
 max_EHVI(model, lower = rep(0, model@d), upper = rep(1, model@d),
-  control = NULL, optimcontrol = list(max.time = 2))
+  control = NULL, optimcontrol = NULL)
 }
 \arguments{
-\item{model}{object of class \code{mkm} containing the objectives and constrains}
+\item{model}{An object of class \code{\link{mkm}}.}
 
-\item{lower}{
-        Vector with length of \code{par}. Lower bounds for components.
-    }
+\item{lower}{Vector of lower bounds for the variables to be optimized over
+(default: 0 with length \code{model@d}),}
 
-\item{upper}{
-        Vector with length of \code{par}. Upper bounds for components.
-    }
+\item{upper}{Vector of upper bounds for the variables to be optimized over
+(default: 1 with length \code{model@d}),}
 
-\item{control}{
-        The argument is a list that can be used to control the behavior of the algorithm:
-            \describe{
-                \item{\code{maxit}}{
-                    Integer. Maximum number of iterations of the algorithm. 
-                }
-                \item{\code{threshold.stop}}{
-                    Numeric. The program will stop when the expected objective function value \code{threshold.stop} is reached. Default value is \code{NULL}
-                }
-                \item{\code{nb.stop.improvement}}{
-                    Integer. The program will stop when there is no any improvement in \code{nb.stop.improvement} steps. 
-                }
-                \item{\code{smooth}}{
-                    Logical.\code{TRUE} when the objective function is smooth, or differentiable almost everywhere in the
-                        region of \code{par}, \code{FALSE} otherwise. Default value is \code{TRUE}.
-                }
-                \item{\code{max.call}}{
-                    Integer. Maximum number of call of the objective function. Default is set to 1e7.
-                }
-                \item{\code{max.time}}{
-                    Numeric. Maximum running time in seconds.
-                }
-                \item{\code{temperature}}{
-                    Numeric. Initial value for temperature.
-                }
-                \item{\code{visiting.param}}{
-                    Numeric. Parameter for visiting distribution.
-                }
-                \item{\code{acceptance.param}}{
-                    Numeric. Parameter for acceptance distribution.
-                }
-                \item{\code{verbose}}{
-                    Logical. \code{TRUE} means that messages from the algorithm are shown. Default is \code{FALSE}.
-                }
-                \item{\code{simple.function}}{
-                    Logical. \code{FALSE} means that the objective function has only a few local minima. Default is \code{FALSE} which means that the objective function is complicated with many local minima.
-                }
-                \item{\code{trace.mat}}{
-                    Logical. Default is \code{TRUE} which means that the trace matrix will be available in the returned value of \code{GenSA} call.
-                }
-            }
-    }
+\item{control}{An optional list of control parameters, some of them passed to
+the \code{\link{crit_EHI}} function. One can control:
+\describe{
+\item{\code{minimization}}{logical indicating if the EHVI is minimizing
+all objectives (\code{TRUE}, by default) or maximizing all objectives
+(\code{FALSE}). Mixed information not currently accepted, if the user needs
+so, it should invert the functions prior Kriging modeling}
+\item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+the actual Pareto set. If not provided a Pareto set is built based
+ on the current observations of \code{model}.}
+\item{\code{nb.samp}}{default: 50}
+\item{\code{seed}}{default: 42}
+\item{\code{refPoint}}{default: \code{min} or \code{max} values for the Pareto
+ front for each objective}
+}}
+
+\item{optimcontrol}{Optional list of control parameters passed to the
+\code{\link{GenSA}} function. Please, note that the values are passed as
+the \code{control} parameter inside the \code{GenSA} function.}
 }
 \value{
-Vector. The best set of parameters found.
+A list with components:
+\describe{
+ \item{\code{par}}{The best set of parameters found.}
+ \item{\code{value}}{The value of expected hypervolume improvement at par.}
+ }
 }
 \description{
-Description
+Given an object of class \code{\link{mkm}} and a set of tuning parameters,
+max_EI performs the maximization of the Expected Hypervolume Improvement
+criterion and delivers the next point to be visited in an HEGO-like
+procedure.
 }
 \examples{
 # ------------------------

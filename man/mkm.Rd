@@ -7,11 +7,12 @@
 mkm(design, response, modelcontrol = NULL)
 }
 \arguments{
-\item{design}{ a data frame representing the design of experiments. The ith row contains the values of the d input variables corresponding to the ith evaluation}
+\item{design}{Numeric data.frame of the designs (decision space)}
 
-\item{response}{ a vector (or 1-column matrix or data frame) containing the values of the 1-dimensional output given by the objective function at the \code{design} points. }
+\item{response}{Numeric data.frame of the observed responses (objectives and
+constraints) at each design point.}
 
-\item{modelcontrol}{A list of control parameters passed to the
+\item{modelcontrol}{An optional list of control parameters passed to the
 \code{\link{km}} function. One can control:
 \describe{
 \item{\code{objective}}{default: \code{1:ncol(response)}}

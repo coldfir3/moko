@@ -1,14 +1,29 @@
 devtools::use_package("GPareto")
-#' Title
+#' EHVI: Constrained Expected Hypervolume Improvement
 #'
-#' Description
+#' Multi-objective Expected Hypervolume Improvement with respect to the current
+#' Pareto front. It's based on the \code{\link{crit_EHI}} function of the
+#' \code{\link{GPareto}} package. However, the present implementation accounts
+#' for inequalty constrains embeded into a \code{mkm} model.
 #'
-#' @param x a vector representing the input for which one wishes to calculate EHI
-#' @param model object of class \code{mkm} containing the objectives and constrains
-#' @param paretoFront optional object of class \code{ps} containing the actual Pareto set
-#' @param minimization logical indicating if the EHVI is minimizing all objectives
-#'  (\code{TRUE} by default) or maximizing all objectives (\code{FALSE})
 #' @inheritParams GPareto::crit_EHI
+#' @param model An object of class \code{\link{mkm}}.
+#' @param control An optional list of control parameters, some of them passed to
+#'   the \code{\link{crit_EHI}} function. One can control:
+#'   \describe{
+#'   \item{\code{minimization}}{logical indicating if the EHVI is minimizing
+#'   all objectives (\code{TRUE}, by default) or maximizing all objectives
+#'   (\code{FALSE}). Mixed information not currently accepted, if the user needs
+#'   so, it should invert the functions prior Kriging modeling}
+#'   \item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+#'   the actual Pareto set. If not provided a Pareto set is built based
+#'    on the current observations of \code{model}.}
+#'   \item{\code{nb.samp}}{default: 50}
+#'   \item{\code{seed}}{default: 42}
+#'   \item{\code{refPoint}}{default: \code{min} or \code{max} values for the Pareto
+#'    front for each objective}
+#'   }
+#'
 #' @return The Constrained Expected Hypervolume Improvement at \code{x}.
 #' @export
 #' @examples
@@ -39,8 +54,7 @@ EHVI <- function(x, model, control = NULL){
     control$nb.samp = 50
   if (is.null(control$seed))
     control$seed = 42
-  if (is.null(control$nb.samp))
-    control$nb.samp = 50
+
   if (model@j == 0)
     probg <- 1
   else {
@@ -57,18 +71,31 @@ EHVI <- function(x, model, control = NULL){
       control$refPoint <- as.matrix(apply(control$paretoFront, 2, max))
   }
   ehvi <- GPareto::crit_EHI(x, model@km[model@objective], control$paretoFront, control, modelcontrol$type)
- # ehvi <- 1
   return(ehvi*probg)
 }
 
 devtools::use_package("GenSA")
-#' Title
+#' max_EHVI: Maximization of the Expected Hypervolume Improvement criterion
 #'
-#' Description
+#' Given an object of class \code{\link{mkm}} and a set of tuning parameters,
+#' max_EI performs the maximization of the Expected Hypervolume Improvement
+#' criterion and delivers the next point to be visited in an HEGO-like
+#' procedure.
 #'
-#' @inheritParams GenSA::GenSA
 #' @inheritParams EHVI
-#' @return Vector. The best set of parameters found.
+#' @param optimcontrol Optional list of control parameters passed to the
+#'   \code{\link{GenSA}} function. Please, note that the values are passed as
+#'   the \code{control} parameter inside the \code{GenSA} function.
+#' @param lower Vector of lower bounds for the variables to be optimized over
+#'   (default: 0 with length \code{model@d}),
+#' @param upper Vector of upper bounds for the variables to be optimized over
+#'   (default: 1 with length \code{model@d}),
+#' @return A list with components:
+#' \describe{
+#'  \item{\code{par}}{The best set of parameters found.}
+#'  \item{\code{value}}{The value of expected hypervolume improvement at par.}
+#'  }
+#'
 #' @export
 #' @examples
 #' # ------------------------
@@ -81,9 +108,11 @@ devtools::use_package("GenSA")
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=c(0.1,0.1)))
 #' max_EHVI(model)
 max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
-                     control = NULL, optimcontrol = list(max.time = 2)){
+                     control = NULL, optimcontrol = NULL){
   if (class(model) != 'mkm')
     stop('The class of "model" must be "mkm"')
+  if(is.null(optimcontrol$max.time))
+    optimcontrol$max.time <- 2
   fn <- function(x)
     return(-EHVI(x, model, control))
   res <- GenSA::GenSA(NULL, fn, lower, upper, control = optimcontrol)
@@ -91,13 +120,25 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
   return(res[c('value','par')])
 }
 
-#' Title
+#' HEGO: Efficient Global Optimization Algorithm based on the Hypervolume criteria
 #'
-#' Description
+#' Executes \code{nsteps} iterations of the HEGO method to an object of class
+#' \link{\code{mkm}}. At each step, a kriging model is re-estimated (including
+#' covariance parameters re-estimation) based on the initial design points plus
+#' the points visited during all previous iterations; then a new point is
+#' obtained by maximizing the Expected Hypervolume Improvement criterion (EHVI).
 #'
-#' @inheritParams GenSA::GenSA
+#' @param model An object of class \code{\link{mkm}},
+#' @param fun The multi-objective and constraint cost function to be optimized.
+#'   This function must return a vector with the size of \code{model@m +
+#'   model@j} where \code{model@m} are the number of objectives and
+#'   \code{model@j} the number of the constraints,
+#' @param nsteps An integer representing the desired number of iterations,
+#' @param quiet Logical indicating the verbosity of the routine,
 #' @inheritParams EHVI
+#' @inheritParams max_EHVI
 #' @return updated \link{\code{mkm}} model
+#'
 #' @export
 #' @examples
 #' # ----------------
@@ -111,7 +152,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- hEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
+#' model <- HEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -125,7 +166,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- hEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
+#' model <- HEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -A, upper.bounds = A)$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -138,7 +179,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- 15 * replicate(d,sample(0:n,n))/n - 5
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- hEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
+#' model <- HEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
 #' plot(tpf)
 #' points(ps(model@response)$set, col = 'blue', pch = 19)
@@ -151,7 +192,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res)
-#' model <- hEGO(model, fun, 80, quiet = FALSE)
+#' model <- HEGO(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
 #' rgl::plot3d(ps(model@response)$set)
 #' # ----------------
@@ -163,7 +204,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objectives = 1:2))
-#' model <- hEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
+#' model <- HEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
 #' fun <- function(x) Binh(x)[c(1,2)]
 #' gfun <- function(x) -Binh(x)[-c(1,2)]
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(5,3),
@@ -179,15 +220,15 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-#' model <- hEGO(model, fun, 80, quiet = FALSE, control = list(rho = 0.1))
+#' model <- HEGO(model, fun, 80, quiet = FALSE, control = list(rho = 0.1))
 #' fun <- function(x) nowacki_beam(x)[c(1,2)]
 #' gfun <- function(x) -nowacki_beam(x)[-c(1,2)]
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(1,1),
 #'                    constraints = gfun, cdim = 4)$value
 #' plot(tpf)
 #' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
-hEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
-                 control = NULL, optimcontrol = list(max.time = 2)){
+HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
+                 control = NULL, optimcontrol = NULL){
   time <- proc.time()
   if (class(model) != 'mkm')
     stop('The class of "model" must be "mkm"')

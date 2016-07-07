@@ -15,6 +15,8 @@ This function must return a vector with the size of \code{model@m +
 model@j} where \code{model@m} are the number of objectives and
 \code{model@j} the number of the constraints,}
 
+\item{nsteps}{An integer representing the desired number of iterations,}
+
 \item{lower}{Vector of lower bounds for the variables to be optimized over
 (default: 0 with length \code{model@d}),}
 
@@ -37,7 +39,7 @@ model@j} where \code{model@m} are the number of objectives and
   "\code{mdist}" (defult: \code{20}),}
 
 \item{modelcontrol}{An optional list of control parameters to the
-\code{mkm} function (default: \code{model@control}).}
+\code{mkm} function (default: \code{object@control}).}
 }
 \value{
 an updated object of class \code{mkm}.

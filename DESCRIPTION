@@ -18,3 +18,4 @@ Imports:
 RoxygenNote: 5.0.1
 URL: http://github.com/coldfir3/moko
 BugReports: http://github.com/coldfir3/moko/issues
+Suggests: testthat
