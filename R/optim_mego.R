@@ -28,13 +28,13 @@
 #' points(grid[which.min(sres),], col='green')
 #' }
 Tchebycheff <- function(y, s=100, rho=0.1){ #add lambda as parameter or someway to define the wheighting
-  if (!is.integer(s))
+  if (round(s) != s)
     stop("'s' must be integer.")
   if (rho < 0)
     stop("'rho' must be positive.")
   lambda <- sample(0:s, ncol(y))/s
   lambda <- lambda/sum(lambda)
-  y <- t(normalize(y))
+  y <- t(moko:::normalize(y))
   return((1 - rho) * apply(lambda * y, 2, max) + rho * apply(lambda * y, 2, sum))
 }
 
@@ -96,7 +96,7 @@ EI <- function(x, model, control = NULL){
   if (class(model) != 'mkm')
     stop('The class of "model" must be "mkm"')
   if (model@m > 1)
-    stop('Incorrect Number of objectives. Must be equal to 1')
+    stop('Model must have a single objective')
   if (is.null(control$minimization))
     control$minimization <- TRUE
   if (model@j == 0)
@@ -130,30 +130,46 @@ EI <- function(x, model, control = NULL){
 }
 
 devtools::use_package("GenSA")
-#' Title
+#' max_EI: Maximization of the Constrained Expected Improvement criterion
 #'
-#' Description
+#' Given an object of class \code{\link{mkm}} and a set of tuning parameters,
+#' max_EI performs the maximization of the Constrained Expected Improvement
+#' criterion and delivers the next point to be visited in an MEGO-like
+#' procedure.
 #'
-#' @inheritParams GenSA::GenSA
 #' @inheritParams EI
+#' @param optimcontrol Optional list of control parameters passed to the
+#'   \code{\link[GenSA]{GenSA}} function. Please, note that the values are
+#'   passed as the \code{control} parameter inside the \code{GenSA} function.
+#' @param lower Vector of lower bounds for the variables to be optimized over
+#'   (default: 0 with length \code{model@d}),
+#' @param upper Vector of upper bounds for the variables to be optimized over
+#'   (default: 1 with length \code{model@d}),
+#' @return A list with components: \describe{
+#'  \item{\code{par}}{The best set of parameters found.}
+#'  \item{\code{value}}{The value of expected hypervolume improvement at par.}
+#'  }
+#'
 #' @return Vector. The best set of parameters found.
 #' @export
 #' @examples
 #' # --------------------
 #' # Branin-Hoo function
 #' # --------------------
-#' n <- 20
+#' n <- 10
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- apply(doe, 1, DiceKriging::branin)
 #' model <- mkm(doe, res)
 #' max_EI(model)
 max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
-                   control = NULL, optimcontrol = list(max.time = 2)){
+                   control = NULL, optimcontrol = NULL){
   if (class(model) != 'mkm')
     stop('The class of "model" must be "mkm"')
   if (model@m > 1)
-    stop('model must have a single objective')
+    stop('Model must have a single objective')
+  if(is.null(optimcontrol$max.time))
+    optimcontrol$max.time <- 2
   fn <- function(x)
     return(-EI(x, model, control))
   res <- GenSA::GenSA(NULL, fn, lower, upper, control=optimcontrol)
@@ -161,13 +177,29 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
   return(res[c('value','par')])
 }
 
-#' MEGO: Multi-Objective Efficient Global Optimization Algorithm
+#' MEGO: Multi-Objective Efficient Global Optimization Algorithm based on
+#' scalarization of the objectives
 #'
 #' Executes \code{nsteps} iterations of the MEGO method to an object of class
-#' \link{\code{mkm}}. At each step, a weighted kriging model is re-estimated (including
-#' covariance parameters re-estimation) based on the initial design points plus
-#' the points visited during all previous iterations; then a new point is
-#' obtained by maximizing the Expected Improvement criterion (EI).
+#' \code{\link{mkm}}. At each step, a weighted kriging model is re-estimated
+#' (including covariance parameters re-estimation) based on the initial design
+#' points plus the points visited during all previous iterations; then a new
+#' point is obtained by maximizing the Constrained Expected Improvement
+#' criterion (EI).
+#'
+#' @param fun The multi-objective and constraint cost function to be optimized.
+#'   This function must return a vector with the size of \code{model@m +
+#'   model@j} where \code{model@m} are the number of objectives and
+#'   \code{model@j} the number of the constraints,
+#' @param nsteps An integer representing the desired number of iterations,
+#' @param quiet Logical indicating the verbosity of the routine,
+#' @inheritParams EI
+#' @inheritParams max_EI
+#' @return updated \code{\link{mkm}} model
+#'
+#' @references Knowles, J. (2006). ParEGO: a hybrid algorithm with on-line
+#'   landscape approximation for expensive multiobjective optimization problems.
+#'   \emph{IEEE Transactions on Evolutionary Computation}, 10(1), 50-66.
 #'
 #' @export
 #' @examples
@@ -177,11 +209,11 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' n <- 20
 #' d <- 2
 #' m <- 2
-#' A <- 1 #verificar pq 4 nao funfa
+#' A <- 4
 #' fun <- Fonseca
 #' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 #' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res)
+#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
 #' plot(tpf)
@@ -208,7 +240,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- Shaffer2
 #' doe <- 15 * replicate(d,sample(0:n,n))/n - 5
 #' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res)
+#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
 #' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
 #' plot(tpf)
@@ -221,7 +253,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- Viennet
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res)
+#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
 #' rgl::plot3d(ps(model@response)$set)
@@ -233,7 +265,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- Binh
 #' doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol = list(objectives = 1:2))
+#' model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d), objectives = 1:2))
 #' model <- MEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
 #' fun <- function(x) Binh(x)[c(1,2)]
 #' gfun <- function(x) -Binh(x)[-c(1,2)]
@@ -249,7 +281,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- function(x) nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.05,d)))
+#' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
 #' model <- MEGO(model, fun, 80, quiet = FALSE)
 #' plot(model@design, col=ifelse(model@feasible,'blue','red'))
 #' fun <- function(x) nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))[c(1,2)]
@@ -259,31 +291,26 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' plot(tpf)
 #' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
 #'
-#' # ----------------
-#' # The Nowacki Beam (1D DEMO)
-#' # ----------------
-#' n <- 20
-#' d <- 2
-#' fun <- function(x) nowacki_beam(x)[c(1,3,6)]
-#' doe <- replicate(d,sample(0:n,n))/n
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower = rep(0.1,d)))
-#' model <- MEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
-#' plot(model@design, col=ifelse(model@feasible,'blue','red'))
+#' #### some single objective optimization
 #'
-#' #### SOME single objective optimization
+#' n.grid <- 20
+#' x.grid <- y.grid <- seq(0,1,length=n.grid)
+#' design.grid <- expand.grid(x.grid, y.grid)
+#' response.grid <- apply(design.grid, 1, DiceKriging::branin)
+#' z.grid <- matrix(response.grid, n.grid, n.grid)
 #'
 #' # -----------------------------------
 #' # Branin-Hoo function (unconstrained)
 #' # -----------------------------------
-#' n <- 20
+#' n <- 10
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
 #' fun <- DiceKriging::branin
 #' res <- apply(doe, 1, fun)
 #' model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 20, quiet = FALSE)
-#' plot(model@design, col=ifelse(model@feasible,'blue','red'))
+#' contour(x.grid,y.grid,z.grid,40)
+#' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------
 #' # Branin-Hoo function (simple constraint)
 #' # ---------------------------------------
@@ -296,7 +323,8 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 10, quiet = FALSE)
-#' plot(model@design, col=ifelse(model@feasible,'blue','red'))
+#' contour(x.grid,y.grid,z.grid,40)
+#' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------
 #' # Branin-Hoo function (narrow constraint)
 #' # ---------------------------------------
@@ -307,19 +335,20 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun_cntr <- function(x){
 #'  g1 <- 0.9 - sum(x)
 #'  g2 <- sum(x) - 1.1
-#'  g3 <- - x[1] + 0.5
-#'  g4 <- x[2] - 0.5
+#'  g3 <- - x[1] + 0.75
+#'  g4 <- x[2] - 0.25
 #'  return(c(g1,g2,g3,g4))
 #' }
 #' fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 10, quiet = FALSE)
-#' plot(model@design, col=ifelse(model@feasible,'blue','red'))
+#' contour(x.grid,y.grid,z.grid,40)
+#' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------------
-#' # Branin-Hoo function (discontinuos constraint)
+#' # Branin-Hoo function (disconnected constraint)
 #' # ---------------------------------------------
-#' n <- 20
+#' n <- 10
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
 #' Griewank <-  function(x) {
@@ -335,9 +364,10 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
 #' model <- MEGO(model, fun, 20, quiet = FALSE)
-#' plot(model@design, col=ifelse(model@feasible,'blue','red'))
+#' contour(x.grid,y.grid,z.grid,40)
+#' points(model@design, col=ifelse(model@feasible,'blue','red'))
 MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
-                 control = NULL, optimcontrol = list(max.time = 2)){
+                 control = NULL, optimcontrol = NULL){
   time <- proc.time()
   if (class(model) != 'mkm')
     stop('The class of "model" must be "mkm"')
@@ -350,8 +380,8 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
   design <- model@design
   response <- model@response
   if (model@m > 1){
-    s_response <- moko:::Tchebycheff(response[,model@objective],
-                                   s=control$s, rho=control$rho)
+    s_response <- Tchebycheff(response[,model@objective],
+                              s=control$s, rho=control$rho)
     s_response <- cbind(s_response, model@response[,-model@objective])
     s_modelcontrol$objective <- 1
   }
@@ -371,7 +401,14 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
     }
     else
       s_response <- response
-    s_model <- mkm(design, s_response, s_modelcontrol)
+#    s_model <- mkm(design, s_response, s_modelcontrol)
+    .model <- try(mkm(design, s_response, s_modelcontrol), TRUE)
+    if (class(.model) == 'mkm')
+      s_model <- .model
+    else{
+      warning("Failed to update the kriging model at iteration number ",i,".")
+      break
+    }
     if (!quiet){
       cat('Current iteration:', n, '(elapsed', (proc.time()-time)[3], 'seconds)\n')
       cat('Current design:', round(x_star,3), '\n')
@@ -381,28 +418,4 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
   }
   model <- mkm(design, response, model@control)
   return(model)
-}
-
-if(F){
-n <- 20
-d <- 2
-grid <- expand.grid(replicate(d,seq(0,1,,50),F))
-fun <- nowacki_beam
-doe <- replicate(d,sample(0:n,n))/n
-res <- t(apply(doe, 1, fun))
-
-sresponse <- cbind(moko:::Tchebycheff(res[,1:2]),res[,-(1:2)])
-smodel <- mkm(doe, sresponse, modelcontrol = list(objectives=1))
-pred <- predict(smodel,grid)
-s_g <- pred$sd[,-1]
-m_g <- pred$mean[,-1]
-probg <- apply(pnorm(-m_g/s_g), 1, prod)
-contour(matrix(probg,ncol=50))
-points(model@design, pch=19, col='blue')
-(x_star <- max_EI(smodel, rep(0,d), rep(1,d), , list(max.time = 2)))
-(y_star <- fun(x_star$par))
-points(t(x_star$par), pch=19, col='green')
-doe <- rbind(doe,x_star$par)
-res <- rbind(res,y_star)
-rownames(res) <- NULL
 }

@@ -23,7 +23,7 @@ the \code{\link[GPareto]{crit_EHI}} function. One can control:
 all objectives (\code{TRUE}, by default) or maximizing all objectives
 (\code{FALSE}). Mixed information not currently accepted, if the user needs
 so, it should invert the functions prior Kriging modeling}
-\item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+\item{\code{paretoFront}}{object of class \code{\link{ps}} containing
 the actual Pareto set. If not provided a Pareto set is built based
  on the current observations of \code{model}.}
 \item{\code{nb.samp}}{default: 50}
@@ -33,7 +33,7 @@ the actual Pareto set. If not provided a Pareto set is built based
 }}
 
 \item{optimcontrol}{Optional list of control parameters passed to the
-\code{\link{GenSA}} function. Please, note that the values are passed as
+\code{\link[GenSA]{GenSA}} function. Please, note that the values are passed as
 the \code{control} parameter inside the \code{GenSA} function.}
 }
 \value{
@@ -45,7 +45,7 @@ A list with components:
 }
 \description{
 Given an object of class \code{\link{mkm}} and a set of tuning parameters,
-max_EI performs the maximization of the Expected Hypervolume Improvement
+max_EHVI performs the maximization of the Expected Hypervolume Improvement
 criterion and delivers the next point to be visited in an HEGO-like
 procedure.
 }

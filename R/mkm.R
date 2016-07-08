@@ -1,5 +1,5 @@
 devtools::use_package("DiceKriging")
-
+devtools::use_package("methods")
 
 #' An S4 class of multiple Kriging models
 #'
@@ -245,16 +245,3 @@ predict.mkm <- function(object, newdata, modelcontrol = NULL){
 
 #' @export
 setMethod("predict", c("mkm"), predict.mkm)
-
-#' @export
-list2mkm <- function(list_of_models){ #rever e completar os outros slots
-  model <- new('mkm')
-  model@km <- list_of_models
-  model@design <- as.data.frame(list_of_models[[1]]@X)
-  model@response <- as.data.frame(lapply(list_of_models, function(model) model@y))
-  model@d <- ncol(model@design)
-  model@n <- nrow(model@design)
-  model@m <- length(model@objective)
-  model@j <- length(model@km) - model@m
-  return(model)
-}

@@ -1,29 +1,23 @@
 devtools::use_package("mco")
-#' Creates a predicted pareto front using nsga-ii algorithm
+#' Predicted Pareto front
 #'
 #' This function creates a predicted pareto front based on the mean of Kriging
 #' models. The predicted mean of each objective and constraint is passed to the
-#' nsga-ii algorithm.
+#' \code{\link[nsga2R]{nsga2R}} algorithm that.
 #'
-#' Details
-#'
-#' @param model Object of class \code{\link{mkm}}
+#' @param model Object of class \code{\link{mkm}}.
 #' @param lower Vector of lower bounds for the variables to be optimized over
-#'   (default: 0 with length \code{model@d}),
+#'   (default: 0 with length \code{model@d}).
 #' @param upper Vector of upper bounds for the variables to be optimized over
-#'   (default: 1 with length \code{model@d}),
+#'   (default: 1 with length \code{model@d}).
 #' @param control An optional list of control parameters that controlls the
-#'   optimization algorithm. One can control:
-#'
-#'   "\code{popsize}" (default: \code{200});
-#'
-#'   "\code{generations}" (default: \code{30});
-#'
-#'   "\code{cdist}" (default: \code{1/model@d});
-#'
-#'   "\code{mprob}" (default: \code{15});
-#'
-#'   "\code{mdist}" (defult: \code{20}),
+#'   optimization algorithm. One can control: \describe{
+#'   \item{\code{popsize}}{(default: \code{200});}
+#'   \item{\code{generations}}{(default: \code{30});}
+#'   \item{\code{cdist}}{(default: \code{1/model@d});}
+#'   \item{\code{mprob}}{(default: \code{15});}
+#'   \item{\code{mdist}}{(defult: \code{20}).}
+#'   }
 #' @inheritParams predict.mkm
 #'
 #' @return object of class \code{\link{ps}} containing the predicted Pareto front
@@ -93,14 +87,14 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
               mdist = control$mdist,
               vectorized = TRUE
               )
-  return(mco2ps(res))
+  return(moko:::mco2ps(res))
 }
 
 #' VMPF: Variance Minimization of the Predicted Front
 #'
 #' Executes \code{nsteps} iterations of the VMPF algorithm to an object of class
-#' \code{mkm}. At each step, a multi-objective kriging model is re-estimated
-#' (including covariance pa rameters re-estimation).
+#' \code{\link{mkm}}. At each step, a multi-objective kriging model is re-estimated
+#' (including covariance parameters re-estimation).
 #'
 #' The infill point is sampled from the most uncertain design of a predicted
 #' Pareto set. This set is predicted using nsga-2 algorithm and the mean value
@@ -237,7 +231,15 @@ VMPF <- function(model, fun, nsteps, lower = rep(0,model@d) , upper = rep(1,mode
     pf_s <- predict(model, pf_x, modelcontrol)$norm_sd
     x_star <- pf_x[which.max(pf_s),]
     y_star <- fun(x_star)
-    model <- mkm(rbind(model@design,x_star), rbind(model@response,y_star), modelcontrol)
+    .model <- try(
+      mkm(rbind(model@design,x_star), rbind(model@response,y_star), model@control),
+      TRUE)
+    if (class(.model) == 'mkm')
+      model <- .model
+    else{
+      warning("Failed to update the kriging model at iteration number ",i,".")
+      break
+    }
     if (!quiet){
       cat('Current iteration:', n, '(elapsed', (proc.time()-time)[3], 'seconds)\n')
       cat('Current design:', round(x_star,3),'\n')

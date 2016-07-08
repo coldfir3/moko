@@ -8,6 +8,8 @@ radviz(data, ...)
 }
 \arguments{
 \item{data}{data.frame containing the variables or observations to be ploted}
+
+\item{...}{opitional plotting argumentos passed to \code{points} function.}
 }
 \description{
 Description

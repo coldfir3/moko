@@ -8,11 +8,11 @@ HEGO(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d),
   quiet = TRUE, control = NULL, optimcontrol = NULL)
 }
 \arguments{
-\item{model}{An object of class \code{\link{mkm}},}
+\item{model}{An object of class \code{\link{mkm}}.}
 
 \item{fun}{The multi-objective and constraint cost function to be optimized.
-This function must return a vector with the size of \code{model@m +
-model@j} where \code{model@m} are the number of objectives and
+This function must return a vector with the size of \code{model@m + model@j}
+where \code{model@m} are the number of objectives and
 \code{model@j} the number of the constraints,}
 
 \item{nsteps}{An integer representing the desired number of iterations,}
@@ -32,7 +32,7 @@ the \code{\link[GPareto]{crit_EHI}} function. One can control:
 all objectives (\code{TRUE}, by default) or maximizing all objectives
 (\code{FALSE}). Mixed information not currently accepted, if the user needs
 so, it should invert the functions prior Kriging modeling}
-\item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+\item{\code{paretoFront}}{object of class \code{\link{ps}} containing
 the actual Pareto set. If not provided a Pareto set is built based
  on the current observations of \code{model}.}
 \item{\code{nb.samp}}{default: 50}
@@ -42,15 +42,15 @@ the actual Pareto set. If not provided a Pareto set is built based
 }}
 
 \item{optimcontrol}{Optional list of control parameters passed to the
-\code{\link{GenSA}} function. Please, note that the values are passed as
+\code{\link[GenSA]{GenSA}} function. Please, note that the values are passed as
 the \code{control} parameter inside the \code{GenSA} function.}
 }
 \value{
-updated \link{\code{mkm}} model
+updated \code{\link{mkm}} model
 }
 \description{
 Executes \code{nsteps} iterations of the HEGO method to an object of class
-\link{\code{mkm}}. At each step, a kriging model is re-estimated (including
+\code{\link{mkm}}. At each step, a kriging model is re-estimated (including
 covariance parameters re-estimation) based on the initial design points plus
 the points visited during all previous iterations; then a new point is
 obtained by maximizing the Expected Hypervolume Improvement criterion (EHVI).
@@ -62,11 +62,11 @@ obtained by maximizing the Expected Hypervolume Improvement criterion (EHVI).
 n <- 20
 d <- 2
 m <- 2
-A <- 1 #verificar pq 4 nao funfa
+A <- 4
 fun <- Fonseca
 doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
+model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- HEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
 tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
 plot(tpf)
@@ -80,7 +80,7 @@ A <- 10
 fun <- Shaffer1
 doe <- 2*A*replicate(d,sample(0:n,n))/n - A
 res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
+model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- HEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
 tpf <- mco::nsga2(fun, d, 2, lower.bounds = -A, upper.bounds = A)$value
 plot(tpf)
@@ -93,7 +93,7 @@ d <- 1
 fun <- Shaffer2
 doe <- 15 * replicate(d,sample(0:n,n))/n - 5
 res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
+model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- HEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
 tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
 plot(tpf)
@@ -106,7 +106,7 @@ d <- 2
 fun <- Viennet
 doe <- replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
+model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- HEGO(model, fun, 80, quiet = FALSE)
 pairs(ps(model@response)$set)
 rgl::plot3d(ps(model@response)$set)
@@ -118,7 +118,7 @@ d <- 2
 fun <- Binh
 doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res, modelcontrol = list(objectives = 1:2))
+model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d), objectives = 1:2))
 model <- HEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
 fun <- function(x) Binh(x)[c(1,2)]
 gfun <- function(x) -Binh(x)[-c(1,2)]

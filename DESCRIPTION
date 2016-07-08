@@ -14,7 +14,8 @@ Imports:
     GenSA (>= 1.1.6),
     emoa (>= 0.5.0),
     mco (>= 1.0.15.1),
-    GPareto (>= 1.0.2)
+    GPareto (>= 1.0.2),
+    methods
 RoxygenNote: 5.0.1
 URL: http://github.com/coldfir3/moko
 BugReports: http://github.com/coldfir3/moko/issues

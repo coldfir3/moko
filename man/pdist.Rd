@@ -11,13 +11,15 @@ pdist(point, set, method = "manhattan")
 
 \item{set}{numeric matrix}
 
-\item{method}{the distance measure to be used. This must be one of "euclidean" or "manhattan" (default)}
+\item{method}{the distance measure to be used. This must be one of
+"euclidean" or "manhattan" (default).}
 }
 \value{
 numeric value indicating the minimum distance between point and set
 }
 \description{
-This function computes and returns the minimum distance between a vector and a matrix
+This function computes and returns the minimum distance between a vector and
+a matrix
 }
 \details{
 #@export

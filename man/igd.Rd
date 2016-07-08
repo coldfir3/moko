@@ -2,26 +2,43 @@
 % Please edit documentation in R/ps_metrics.R
 \name{igd}
 \alias{igd}
-\title{IGD pareto quality metric}
+\title{IGD: Inverted Generational Distance}
 \usage{
 igd(aps, tps, method = "manhattan", norm = TRUE)
 }
 \arguments{
-\item{method}{the distance measure to be used. This must be one of "euclidean" or "manhattan" (default)}
+\item{aps}{'ps' object containing the 'actual' pareto front}
 
-\item{apf}{'ps' object containing the 'actual' pareto front}
+\item{tps}{'ps' object containing the 'true' pareto front}
 
-\item{tpf}{'ps' object containing the 'true' pareto front}
+\item{method}{the distance measure to be used. This must be one of
+"euclidean" or "manhattan" (default).}
+
+\item{norm}{Logical indicating if the fronts should be normalized (default =
+TRUE).}
 }
 \value{
 returns the IGD metric
 }
 \description{
-This function implements the method described in shimoyama2013kriging
+The IGD is a perfomance measure function of Pareto front fidelity and
+corresponds to the average distance between all designs in the true set and
+the closest design of the current set. Thus, the lower the IGD value, the
+better the front is.
+}
+\details{
+\deqn{ \text{IGD}(\matx{T},\matx{P}) = \frac{1}{|\matx{T}|} \sum_{\vect{t}
+\in \matx{T}} \text{min}(d(\vect{t} - \vect{p}))_{\vect{p} \in \matx{P}} }{}
 }
 \examples{
 aps <- ps(matrix(rnorm(1:1000),ncol=2))
 tps <- ps(matrix(rnorm(1:2000),ncol=2))
 igd(aps,tps)
+}
+\references{
+Shimoyama, K., Jeong, S., & Obayashi, S. (2013, June).
+  Kriging-surrogate-based optimization considering expected hypervolume
+  improvement in non-constrained many-objective test problems. In 2013 IEEE
+  \emph{Congress on Evolutionary Computation} (pp. 658-665). IEEE.
 }
 

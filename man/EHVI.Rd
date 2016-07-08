@@ -18,7 +18,7 @@ the \code{\link[GPareto]{crit_EHI}} function. One can control:
 all objectives (\code{TRUE}, by default) or maximizing all objectives
 (\code{FALSE}). Mixed information not currently accepted, if the user needs
 so, it should invert the functions prior Kriging modeling}
-\item{\code{paretoFront}}{object of class \code{\link{ps-class}} containing
+\item{\code{paretoFront}}{object of class \code{\link{ps}} containing
 the actual Pareto set. If not provided a Pareto set is built based
  on the current observations of \code{model}.}
 \item{\code{nb.samp}}{default: 50}

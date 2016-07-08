@@ -11,13 +11,15 @@ ps(y, minimization = TRUE, light.return = FALSE)
 
 \item{minimization}{logical representing if the set is to be minimized or not}
 
-\item{light.return}{logical indicating if the indexes should be writen on the 'ps' object}
+\item{light.return}{logical indicating if the indexes should be writen on the
+'ps' object}
 }
 \value{
-S3 class object that contains information of the pareto set
+S3 class object that contains information of the Pareto set
 }
 \description{
-Description
+Return those points which are not dominated by another point in \code{y} This
+is the Pareto front approximation of the design set.
 }
 \examples{
 aps <- ps(matrix(rnorm(1:1000),ncol=2))

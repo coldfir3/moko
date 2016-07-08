@@ -8,7 +8,8 @@ nowacki_beam(x, g = c(5, 240, 120, 10), l = 1500, F = 5000, E = 216620,
   G = 86650, v = 0.27, box = data.frame(b = c(10, 50), h = c(20, 250)))
 }
 \arguments{
-\item{x}{vector of length 2 correspon the normalized beath and height of the beam}
+\item{x}{vector of length 2 correspon the normalized beath and height of the
+beam}
 
 \item{g}{vector of lenght 4 containing the limit of each constraint}
 
@@ -22,16 +23,25 @@ nowacki_beam(x, g = c(5, 240, 120, 10), l = 1500, F = 5000, E = 216620,
 
 \item{v}{numeric poison ratio}
 
-\item{box}{data.frame structure containing the upper and lower limits for \code{b} and \code{h}}
+\item{box}{data.frame structure containing the upper and lower limits for
+\code{b} and \code{h}}
 }
 \value{
 vector of objective and constrain responses
 }
 \description{
-Description
+This function is a variation of the classic multi-objective optimization
+problem (NOWACKI, 1980). In this problem the aim is to design a tip loaded
+cantilever eam for minimum cross-sectional aera and lowest bending stress
+subject to a number of constraints.
 }
 \examples{
 
 nowacki_beam(c(0.5,0.5))
+}
+\references{
+Forrester, A., Sobester, A., & Keane, A. (2008).
+  \emph{Engineering design via surrogate modelling: a practical guide.} John
+  Wiley & Sons.
 }
 

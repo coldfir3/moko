@@ -3,6 +3,7 @@
 #' Description
 #'
 #' @param data data.frame containing the variables or observations to be ploted
+#' @param ... opitional plotting argumentos passed to \code{points} function.
 #' @export
 #' @examples
 #' data <- data.frame(matrix(rnorm(1:50),ncol=5))

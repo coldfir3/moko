@@ -26,17 +26,13 @@ model@j} where \code{model@m} are the number of objectives and
 \item{quiet}{Logical indicating the verbosity of the routine,}
 
 \item{control}{An optional list of control parameters that controlls the
-  optimization algorithm. One can control:
-
-  "\code{popsize}" (default: \code{200});
-
-  "\code{generations}" (default: \code{30});
-
-  "\code{cdist}" (default: \code{1/model@d});
-
-  "\code{mprob}" (default: \code{15});
-
-  "\code{mdist}" (defult: \code{20}),}
+optimization algorithm. One can control: \describe{
+\item{\code{popsize}}{(default: \code{200});}
+\item{\code{generations}}{(default: \code{30});}
+\item{\code{cdist}}{(default: \code{1/model@d});}
+\item{\code{mprob}}{(default: \code{15});}
+\item{\code{mdist}}{(defult: \code{20}).}
+}}
 
 \item{modelcontrol}{An optional list of control parameters to the
 \code{mkm} function (default: \code{object@control}).}
@@ -46,8 +42,8 @@ an updated object of class \code{mkm}.
 }
 \description{
 Executes \code{nsteps} iterations of the VMPF algorithm to an object of class
-\code{mkm}. At each step, a multi-objective kriging model is re-estimated
-(including covariance pa rameters re-estimation).
+\code{\link{mkm}}. At each step, a multi-objective kriging model is re-estimated
+(including covariance parameters re-estimation).
 }
 \details{
 The infill point is sampled from the most uncertain design of a predicted

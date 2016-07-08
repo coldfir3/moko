@@ -4,12 +4,14 @@ setClass("ps")
 devtools::use_package("emoa")
 #' Creates a pareto set from given data
 #'
-#' Description
+#' Return those points which are not dominated by another point in \code{y} This
+#' is the Pareto front approximation of the design set.
 #'
 #' @param y design space data
 #' @param minimization logical representing if the set is to be minimized or not
-#' @param light.return logical indicating if the indexes should be writen on the 'ps' object
-#' @return S3 class object that contains information of the pareto set
+#' @param light.return logical indicating if the indexes should be writen on the
+#'   'ps' object
+#' @return S3 class object that contains information of the Pareto set
 #' @export
 #' @examples
 #' aps <- ps(matrix(rnorm(1:1000),ncol=2))

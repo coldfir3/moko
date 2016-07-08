@@ -2,31 +2,27 @@
 % Please edit documentation in R/optim_vmpf.R
 \name{predict_front}
 \alias{predict_front}
-\title{Creates a predicted pareto front using nsga-ii algorithm}
+\title{Predicted Pareto front}
 \usage{
 predict_front(model, lower, upper, control = NULL, modelcontrol = NULL)
 }
 \arguments{
-\item{model}{Object of class \code{\link{mkm}}}
+\item{model}{Object of class \code{\link{mkm}}.}
 
 \item{lower}{Vector of lower bounds for the variables to be optimized over
-(default: 0 with length \code{model@d}),}
+(default: 0 with length \code{model@d}).}
 
 \item{upper}{Vector of upper bounds for the variables to be optimized over
-(default: 1 with length \code{model@d}),}
+(default: 1 with length \code{model@d}).}
 
 \item{control}{An optional list of control parameters that controlls the
-  optimization algorithm. One can control:
-
-  "\code{popsize}" (default: \code{200});
-
-  "\code{generations}" (default: \code{30});
-
-  "\code{cdist}" (default: \code{1/model@d});
-
-  "\code{mprob}" (default: \code{15});
-
-  "\code{mdist}" (defult: \code{20}),}
+optimization algorithm. One can control: \describe{
+\item{\code{popsize}}{(default: \code{200});}
+\item{\code{generations}}{(default: \code{30});}
+\item{\code{cdist}}{(default: \code{1/model@d});}
+\item{\code{mprob}}{(default: \code{15});}
+\item{\code{mdist}}{(defult: \code{20}).}
+}}
 
 \item{modelcontrol}{An optional list of control parameters to the
 \code{mkm} function (default: \code{object@control}).}
@@ -37,10 +33,7 @@ object of class \code{\link{ps}} containing the predicted Pareto front
 \description{
 This function creates a predicted pareto front based on the mean of Kriging
 models. The predicted mean of each objective and constraint is passed to the
-nsga-ii algorithm.
-}
-\details{
-Details
+\code{\link[nsga2R]{nsga2R}} algorithm that.
 }
 \examples{
 # ------------------------
