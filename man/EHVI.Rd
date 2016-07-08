@@ -12,7 +12,7 @@ EHVI(x, model, control = NULL)
 \item{model}{An object of class \code{\link{mkm}}.}
 
 \item{control}{An optional list of control parameters, some of them passed to
-the \code{\link{crit_EHI}} function. One can control:
+the \code{\link[GPareto]{crit_EHI}} function. One can control:
 \describe{
 \item{\code{minimization}}{logical indicating if the EHVI is minimizing
 all objectives (\code{TRUE}, by default) or maximizing all objectives

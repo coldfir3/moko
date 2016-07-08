@@ -2,12 +2,25 @@
 % Please edit documentation in R/optim_pego.R
 \name{Tchebycheff}
 \alias{Tchebycheff}
-\title{Tchebycheff}
+\title{Augmented Tchebycheff function}
 \usage{
 Tchebycheff(y, s = 100, rho = 0.1)
 }
+\arguments{
+\item{y}{Numerical matrix or data.frame containing the responses (on each
+column) to be scalarized.}
+
+\item{s}{Numerical integer (default: 100) setting the number of partitions
+the vector lambda has.}
+
+\item{rho}{A small positive value (default: 0.1) setting the "strenght" of
+the non-linear term.}
+}
 \description{
-Description
+The Augmented Tchebycheff function (KNOWLES, 2006) is a scalarizing function
+witch the advantages of having a non-linear term. That causes points on
+nonconvex regions of the Pareto front can bve minimizers of this function
+and, thus, nonsupported solutions can be obtained.
 }
 \examples{
 grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
@@ -15,9 +28,14 @@ grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
  plot(nowacki_beam_tps$x, xlim=c(0,1), ylim=c(0,1))
  grid <- grid[which(as.logical(apply(res[,-(1:2)] < 0, 1, prod))),]
  res <- res[which(as.logical(apply(res[,-(1:2)] < 0, 1, prod))),1:2]
-for (i in 1:1000){
-sres <- moko:::Tchebycheff(res[,1:2], s=100, rho=0.1)
+for (i in 1:10){
+sres <- Tchebycheff(res[,1:2], s=100, rho=0.1)
 points(grid[which.min(sres),], col='green')
 }
+}
+\references{
+Knowles, J. (2006). ParEGO: a hybrid algorithm with on-line
+  landscape approximation for expensive multiobjective optimization problems.
+  \emph{IEEE Transactions on Evolutionary Computation}, 10(1), 50-66.
 }
 

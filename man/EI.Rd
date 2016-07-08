@@ -2,18 +2,49 @@
 % Please edit documentation in R/optim_pego.R
 \name{EI}
 \alias{EI}
-\title{Constrained expected improvement}
+\title{Constrained Expected Emprovement}
 \usage{
 EI(x, model, control = NULL)
 }
+\arguments{
+\item{x}{A vector representing the input for which one wishes to calculate EI.}
+
+\item{model}{An object of class \code{\link{mkm}}.}
+
+\item{control}{An optional list of control parameters, some of them passed to
+the \code{\code{\link[DiceOptim]{EI}}} function. One can control:
+  \describe{
+   \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
+   (default: TRUE)}
+   \item{\code{plugin}}{optional scalar, if not provided, the minimum (or maximum) of the current
+    feasible observations. If there isn't any feasible design plugin is set to \code{NA} and the
+    algorithm returns the value of the probabilty of constraints be met.}
+   \item{\code{envir}}{optional enviroment specifying where to assign intermediate values.
+    Default is NULL.}
+  }}
+}
 \description{
-description
+This functions extends the \code{\link[DiceOptim]{EI}} function suplyied by the package
+\code{\link{DiceOptim}}. The enxtension allows to the usage of multiple
+expensive constraints. The constraints must be passed to the EI function
+embedded in the \code{\link{mkm}} object. Currently low-cost (explicit)
+constraints are not allowed.
+}
+\details{
+The way that the constraints are handled are based on the probability of
+feasibility. The strong assumption here is that the cost functions and the
+constraints are uncorrelated. With that assumption in mind, a simple
+closed-form solution can be derived that consists in the product of the
+probability that each constraint will be met and the expected improvemen of
+the objective. Another important consideration is that, by default, the value
+of the pluging passed to the \code{\link[DiceOptim]{EI}} is the best
+\emph{feasible} observed value.
 }
 \examples{
 # --------------------
-# Branin-Hoo function
+# Branin-Hoo function (with simple constraint)
 # --------------------
-n <- 20
+n <- 10
 d <- 2
 doe <- replicate(d,sample(0:n,n))/n
 fun_cost <- DiceKriging::branin
@@ -25,39 +56,11 @@ grid <- expand.grid(seq(0,1,,50),seq(0,1,,50))
 ei <- apply(grid, 1, EI, model) # this computation may take some time
 contour(matrix(ei,50))
 points(model@design, col=ifelse(model@feasible,'blue','red'))
-# ------------------------
-# The Nowacki Beam
-# ------------------------
-fun_cost <- DiceKriging::branin
-fun_cntr <- function(x){
- g1 <- 0.9 - sum(x)
- g2 <- sum(x) - 1.1
- g3 <- - x[1] + 0.5
- g4 <- x[2] - 0.5
- return(c(g1,g2,g3,g4))
+points(grid[which.max(ei),], col='green')
 }
-fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
-fun <- nowacki_beam
-n <- 50
-d <- 2
-plugin <- NULL
-doe <- replicate(d,sample(0:n,n))/n
-doe <- replicate(d,sample(5:n,n-5))/n
-for (i in 1:80){
-res <- t(apply(doe, 1, fun))
-res <- cbind(moko:::Tchebycheff(res[,1:2]),res[,-(1:2)])
-#res <- cbind(res[,2],res[,-(1:2)])
-model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=rep(0.1,d)))
-grid <- expand.grid(seq(0.1, 1, , 25),seq(0.1, 1, , 25))
-ei <- apply(grid, 1, EI, model)
-#, control=list(plugin=NULL)) # this computation may take some time
-contour(matrix(ei, 25))
-points(model@design, col=ifelse(model@feasible,'blue','red'))
-points(grid[which.max(ei),], col='green', pch=19)
-x_star <- unlist(grid[which.max(ei),])
-y_star <- fun(x_star)
-doe <- rbind(doe, x_star)
-row.names(doe) <- NULL
-}
+\references{
+Forrester, A., Sobester, A., & Keane, A. (2008).
+  \emph{Engineering design via surrogate modelling: a practical guide.} John
+  Wiley & Sons.
 }
 

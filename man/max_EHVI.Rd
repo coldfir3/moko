@@ -17,7 +17,7 @@ max_EHVI(model, lower = rep(0, model@d), upper = rep(1, model@d),
 (default: 1 with length \code{model@d}),}
 
 \item{control}{An optional list of control parameters, some of them passed to
-the \code{\link{crit_EHI}} function. One can control:
+the \code{\link[GPareto]{crit_EHI}} function. One can control:
 \describe{
 \item{\code{minimization}}{logical indicating if the EHVI is minimizing
 all objectives (\code{TRUE}, by default) or maximizing all objectives

@@ -8,6 +8,8 @@ max_EI(model, lower = rep(0, model@d), upper = rep(1, model@d),
   control = NULL, optimcontrol = list(max.time = 2))
 }
 \arguments{
+\item{model}{An object of class \code{\link{mkm}}.}
+
 \item{lower}{
         Vector with length of \code{par}. Lower bounds for components.
     }
