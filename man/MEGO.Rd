@@ -59,20 +59,17 @@ criterion (EI).
 # ----------------
 n <- 20
 d <- 2
-fun <- function(x) nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))
+fun <- nowacki_beam
 doe <- replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-model <- MEGO(model, fun, 80, quiet = FALSE)
-plot(model@design, col=ifelse(model@feasible,'blue','red'))
-fun <- function(x) nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))[c(1,2)]
-gfun <- function(x) -nowacki_beam(x, box = data.frame(b = c(10, 50),h = c(50, 250)))[-c(1,2)]
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(1,1),
-                  constraints = gfun, cdim = 4)$value
-plot(tpf)
-points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
+model <- MEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+plot(nowacki_beam_tps$set)
+points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 
-#### some single objective optimization
+############################################
+#### some single objective optimization ####
+############################################
 
 n.grid <- 20
 x.grid <- y.grid <- seq(0,1,length=n.grid)

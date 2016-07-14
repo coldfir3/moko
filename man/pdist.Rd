@@ -21,11 +21,4 @@ numeric value indicating the minimum distance between point and set
 This function computes and returns the minimum distance between a vector and
 a matrix
 }
-\details{
-#@export
-}
-\examples{
-aps <- ps(matrix(rnorm(1:1000),ncol=2))
-pdist(c(0,0), aps$set)
-}
 

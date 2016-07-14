@@ -111,7 +111,7 @@ Fonseca <- function(x){
 #' @examples
 #'
 #' #function should be evaluated in the -5 < x < 5 interval and \length(x) == 3
-#' Kursawe(rep(0,10))
+#' Kursawe(rep(0,3))
 Kursawe <- function(x){
   d <- 3
   if (length(x) != d)

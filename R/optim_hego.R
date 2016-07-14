@@ -37,7 +37,8 @@ devtools::use_package("GPareto")
 #' res <- t(apply(doe, 1, nowacki_beam))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=rep(0.1,d)))
 #' grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
-#' ehvi <- apply(grid, 1, EHVI, model) # this computation may take some time
+#' ### this computation may take some time ###
+#' ehvi <- apply(grid, 1, EHVI, model)
 #' contour(matrix(ehvi, 50))
 #' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' points(grid[which.max(ehvi),], col='green', pch=19)
@@ -150,13 +151,9 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-#' model <- HEGO(model, fun, 80, quiet = FALSE, control = list(rho = 0.1))
-#' fun <- function(x) nowacki_beam(x)[c(1,2)]
-#' gfun <- function(x) -nowacki_beam(x)[-c(1,2)]
-#' tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(1,1),
-#'                    constraints = gfun, cdim = 4)$value
-#' plot(tpf)
-#' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
+#' model <- HEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+#' plot(nowacki_beam_tps$set)
+#' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
                  control = NULL, optimcontrol = NULL){
   time <- proc.time()

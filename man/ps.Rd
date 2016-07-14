@@ -23,7 +23,7 @@ is the Pareto front approximation of the design set.
 }
 \examples{
 aps <- ps(matrix(rnorm(1:1000),ncol=2))
-plot(aps)
+print(aps)
 
 }
 

@@ -4,13 +4,13 @@
 \name{moko}
 \alias{moko}
 \alias{moko-package}
-\title{moko: Multiobjective Kriging Optimization}
+\title{moko: Multi-objective Kriging Optimization}
 \description{
 The package \code{moko} provides the user with methods for constrained and unconstraiend
-multiobjective optimization.
+multi-objective optimization based on the popular Kriging surrogate model.
 }
 \details{
 The main functions provided by \code{moko} are:
-MEGO, HEGO and VMFK
+\code{\link{MEGO}}, \code{\link{HEGO}} and \code{\link{VMPF}}.
 }
 

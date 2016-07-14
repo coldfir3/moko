@@ -65,12 +65,8 @@ fun <- nowacki_beam
 doe <- replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-model <- HEGO(model, fun, 80, quiet = FALSE, control = list(rho = 0.1))
-fun <- function(x) nowacki_beam(x)[c(1,2)]
-gfun <- function(x) -nowacki_beam(x)[-c(1,2)]
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(1,1),
-                   constraints = gfun, cdim = 4)$value
-plot(tpf)
-points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
+model <- HEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+plot(nowacki_beam_tps$set)
+points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 }
 

@@ -41,7 +41,7 @@ Shaffer2(0)
 Fonseca(rep(0,10))
 
 #function should be evaluated in the -5 < x < 5 interval and \\length(x) == 3
-Kursawe(rep(0,10))
+Kursawe(rep(0,3))
 
 #function should be evaluated in the -3 < x < 3 interval and \\length(x) == 2
 Viennet(c(0.5,0.5))

@@ -3,15 +3,11 @@
 #' This function computes and returns the minimum distance between a vector and
 #' a matrix
 #'
-#' #@export
 #' @param point numeric vector
 #' @param set numeric matrix
 #' @param method the distance measure to be used. This must be one of
 #'   "euclidean" or "manhattan" (default).
 #' @return numeric value indicating the minimum distance between point and set
-#' @examples
-#' aps <- ps(matrix(rnorm(1:1000),ncol=2))
-#' pdist(c(0,0), aps$set)
 pdist <- function(point, set, method = "manhattan"){
   point <- t(as.matrix(point))
   dif <- t(apply(set, 1, function(set) set-point))

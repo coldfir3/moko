@@ -46,7 +46,8 @@ doe <- replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, nowacki_beam))
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=rep(0.1,d)))
 grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
-ehvi <- apply(grid, 1, EHVI, model) # this computation may take some time
+### this computation may take some time ###
+ehvi <- apply(grid, 1, EHVI, model)
 contour(matrix(ehvi, 50))
 points(model@design, col=ifelse(model@feasible,'blue','red'))
 points(grid[which.max(ehvi),], col='green', pch=19)

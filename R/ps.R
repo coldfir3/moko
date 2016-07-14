@@ -15,7 +15,7 @@ devtools::use_package("emoa")
 #' @export
 #' @examples
 #' aps <- ps(matrix(rnorm(1:1000),ncol=2))
-#' plot(aps)
+#' print(aps)
 #'
 ps <- function(y, minimization=TRUE, light.return=FALSE){
   y <- t(y)
