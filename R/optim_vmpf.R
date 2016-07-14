@@ -237,7 +237,7 @@ VMPF <- function(model, fun, nsteps, lower = rep(0,model@d) , upper = rep(1,mode
     if (class(.model) == 'mkm')
       model <- .model
     else{
-      warning("Failed to update the kriging model at iteration number ",i,".")
+      warning("Failed to update the kriging model at iteration number ",n,".")
       break
     }
     if (!quiet){

@@ -62,7 +62,7 @@ EHVI <- function(x, model, control = NULL){
     pred_g <- predict(list2mkm(model_g), data.frame(t(x)), modelcontrol)
     s_g <- pred_g$sd
     m_g <- pred_g$mean
-    probg <- prod(pnorm(-m_g/s_g))
+    probg <- prod(stats::pnorm(-m_g/s_g))
   }
   if (is.null(control$refPoint)){
     if (control$minimization)
@@ -240,7 +240,7 @@ HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
     if (class(.model) == 'mkm')
       model <- .model
     else{
-      warning("Failed to update the kriging model at iteration number ",i,".")
+      warning("Failed to update the kriging model at iteration number ",n,".")
       break
       }
     if (!quiet){

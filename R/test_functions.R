@@ -94,7 +94,7 @@ Shaffer2 <- function(x){
 #' @examples
 #'
 #' #function should be evaluated in the -20 < x < 20 interval and \length(x) >= 1
-#' Fonseca(seq(0,10))
+#' Fonseca(rep(0,10))
 Fonseca <- function(x){
   d <- length(x)
   f1 <- 1-exp(-sum(x-1/sqrt(d))^2)
@@ -107,7 +107,7 @@ Fonseca <- function(x){
 #' @examples
 #'
 #' #function should be evaluated in the -5 < x < 5 interval and \length(x) == 3
-#' Kursawe(#' Fonseca(seq(0,3)))
+#' Kursawe(rep(0,10))
 Kursawe <- function(x){
   d <- 3
   if (length(x) != d)
@@ -139,7 +139,7 @@ Viennet <- function(x){
 #' @export
 #' @examples
 #'
-#' #function should be evaluated in the 0 < x < [5,3] interval and \length(x) == 2
+#' #function should be evaluated in the 0 < x < (5,3) interval and \length(x) == 2
 #' Binh(c(0,0))
 Binh <- function(x){
   y <- x[2]

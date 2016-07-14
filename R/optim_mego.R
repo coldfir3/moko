@@ -59,7 +59,7 @@ devtools::use_package("DiceOptim")
 #' @param x A vector representing the input for which one wishes to calculate EI.
 #' @param model An object of class \code{\link{mkm}}.
 #' @param control An optional list of control parameters, some of them passed to
-#' the \code{\code{\link[DiceOptim]{EI}}} function. One can control:
+#' the \code{\link[DiceOptim]{EI}} function. One can control:
 #'   \describe{
 #'    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
 #'    (default: TRUE)}
@@ -106,7 +106,7 @@ EI <- function(x, model, control = NULL){
     pred_g <- predict(list2mkm(model_g), data.frame(t(x)), model@control)
     s_g <- pred_g$sd
     m_g <- pred_g$mean
-    probg <- prod(pnorm(-m_g/s_g))
+    probg <- prod(stats::pnorm(-m_g/s_g))
   }
   if (is.null(control$plugin)){
     if (any(model@feasible)){
@@ -406,7 +406,7 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
     if (class(.model) == 'mkm')
       s_model <- .model
     else{
-      warning("Failed to update the kriging model at iteration number ",i,".")
+      warning("Failed to update the kriging model at iteration number ",n,".")
       break
     }
     if (!quiet){

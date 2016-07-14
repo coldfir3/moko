@@ -6,6 +6,7 @@ Authors@R: person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("
 Description: The package moko provides the user with methods for
   constrained and unconstraiend multiobjective optimization. Those
   methods are all based on the Kriging surogate modeling technique.
+Depends: R (>= 3.0.0)
 License: GPL-3
 LazyData: TRUE
 Imports:
@@ -15,7 +16,7 @@ Imports:
     emoa (>= 0.5.0),
     mco (>= 1.0.15.1),
     GPareto (>= 1.0.2),
-    methods
+    methods (>= 3.0.0)
 RoxygenNote: 5.0.1
 URL: http://github.com/coldfir3/moko
 BugReports: http://github.com/coldfir3/moko/issues
