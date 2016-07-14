@@ -76,9 +76,9 @@ devtools::use_package("DiceOptim")
 #'
 #' @export
 #' @examples
-#' # --------------------
+#' # --------------------------------------------
 #' # Branin-Hoo function (with simple constraint)
-#' # --------------------
+#' # --------------------------------------------
 #' n <- 10
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
@@ -153,14 +153,17 @@ devtools::use_package("GenSA")
 #' @return Vector. The best set of parameters found.
 #' @export
 #' @examples
-#' # --------------------
-#' # Branin-Hoo function
-#' # --------------------
+#' # --------------------------------------------
+#' # Branin-Hoo function (with simple constraint)
+#' # --------------------------------------------
 #' n <- 10
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
-#' res <- apply(doe, 1, DiceKriging::branin)
-#' model <- mkm(doe, res)
+#' fun_cost <- DiceKriging::branin
+#' fun_cntr <- function(x) 0.2 - prod(x)
+#' fun <- function(x) return(cbind(fun_cost(x),fun_cntr(x)))
+#' res <- t(apply(doe, 1, fun))
+#' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
 #' max_EI(model)
 max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
                    control = NULL, optimcontrol = NULL){
@@ -203,75 +206,6 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #'
 #' @export
 #' @examples
-#' # ----------------
-#' # Fonseca and Flemming
-#' # ----------------
-#' n <- 20
-#' d <- 2
-#' m <- 2
-#' A <- 4
-#' fun <- Fonseca
-#' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
-#' model <- MEGO(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
-#' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
-#' plot(tpf)
-#' points(ps(model@response)$set, col = 'blue', pch = 19)
-#' # ----------------
-#' # Shaffer1
-#' # ----------------
-#' n <- 10
-#' d <- 1
-#' A <- 10
-#' fun <- Shaffer1
-#' doe <- 2*A*replicate(d,sample(0:n,n))/n - A
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res)
-#' model <- MEGO(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
-#' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -A, upper.bounds = A)$value
-#' plot(tpf)
-#' points(ps(model@response)$set, col = 'blue', pch = 19)
-#' # ----------------
-#' # Shaffer2
-#' # ----------------
-#' n <- 10
-#' d <- 1
-#' fun <- Shaffer2
-#' doe <- 15 * replicate(d,sample(0:n,n))/n - 5
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
-#' model <- MEGO(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
-#' tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
-#' plot(tpf)
-#' points(ps(model@response)$set, col = 'blue', pch = 19)
-#' # ----------------
-#' # Viennet
-#' # ----------------
-#' n <- 20
-#' d <- 2
-#' fun <- Viennet
-#' doe <- replicate(d,sample(0:n,n))/n
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
-#' model <- MEGO(model, fun, 80, quiet = FALSE)
-#' pairs(ps(model@response)$set)
-#' # ----------------
-#' # Binh
-#' # ----------------
-#' n <- 20
-#' d <- 2
-#' fun <- Binh
-#' doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
-#' res <- t(apply(doe, 1, fun))
-#' model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d), objectives = 1:2))
-#' model <- MEGO(model, fun, 40, upper = c(5,3), quiet = FALSE)
-#' fun <- function(x) Binh(x)[c(1,2)]
-#' gfun <- function(x) -Binh(x)[-c(1,2)]
-#' tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(5,3),
-#'                    constraints = gfun, cdim = 2)$value
-#' plot(tpf)
-#' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
 #' # ----------------
 #' # The Nowacki Beam
 #' # ----------------

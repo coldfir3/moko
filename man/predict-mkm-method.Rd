@@ -36,7 +36,7 @@ realv <- t(apply(newx, 1, nowacki_beam))
 par(mfrow=c(2,3), mar=c(2,2,1,1))
 for (i in 1:6){
   contour(matrix((realv[,i]),N), col='red', lty=2, labels='')
-  contour(matrix((pred$mean[,i]),N), add=T)
+  contour(matrix((pred$mean[,i]),N), add = TRUE)
 }
 }
 

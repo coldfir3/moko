@@ -50,6 +50,11 @@ pdist <- function(point, set, method = "manhattan"){
 #' tps <- ps(matrix(rnorm(1:2000),ncol=2))
 #' igd(aps,tps)
 igd <- function(aps, tps, method = "manhattan", norm = TRUE){
+  if(class(aps) == 'ps')
+    aps <- aps$set
+  if(class(tps) == 'ps')
+    tps <- tps$set
+
   if (norm){
     aps <- normalize(aps)
     tps <- normalize(tps)

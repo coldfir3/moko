@@ -41,9 +41,9 @@ of the pluging passed to the \code{\link[DiceOptim]{EI}} is the best
 \emph{feasible} observed value.
 }
 \examples{
-# --------------------
+# --------------------------------------------
 # Branin-Hoo function (with simple constraint)
-# --------------------
+# --------------------------------------------
 n <- 10
 d <- 2
 doe <- replicate(d,sample(0:n,n))/n

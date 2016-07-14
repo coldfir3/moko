@@ -52,80 +52,6 @@ of the mkm predictor.
 }
 \examples{
 # ----------------
-# Fonseca and Flemming
-# ----------------
-n <- 20
-d <- 2
-m <- 2
-A <- 4
-fun <- Fonseca
-doe <- 2*A*replicate(d,sample(0:n,n))/n - A
-res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
-model <- VMPF(model, fun, 20, lower = -rep(A,d), upper = rep(A,d), quiet = FALSE)
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = -rep(A,d), upper.bounds = rep(A,d))$value
-plot(tpf)
-points(ps(model@response)$set, col = 'blue', pch = 19)
-
-# ----------------
-# Shaffer1
-# ----------------
-n <- 10
-d <- 1
-A <- 10
-fun <- Shaffer1
-doe <- 2*A*replicate(d,sample(0:n,n))/n - A
-res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
-model <- VMPF(model, fun, 20, lower = -A, upper = A, quiet = FALSE)
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = -A, upper.bounds = A)$value
-plot(tpf)
-points(ps(model@response)$set, col = 'blue', pch = 19)
-
-# ----------------
-# Shaffer2
-# ----------------
-n <- 10
-d <- 1
-fun <- Shaffer2
-doe <- 15 * replicate(d,sample(0:n,n))/n - 5
-res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res)
-model <- VMPF(model, fun, 20, lower = -5, upper = 10, quiet = FALSE)
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = -5, upper.bounds = 10)$value
-plot(tpf)
-points(ps(model@response)$set, col = 'blue', pch = 19)
-
-# ----------------
-# Viennet
-# ----------------
-n <- 20
-d <- 2
-fun <- Viennet
-doe <- replicate(d,sample(0:n,n))/n
-res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
-model <- VMPF(model, fun, 80, quiet = FALSE)
-pairs(ps(model@response)$set)
-
-# ----------------
-# Binh
-# ----------------
-n <- 20
-d <- 2
-fun <- Binh
-doe <- cbind(rep(5,n), rep(3,n)) * replicate(d,sample(0:n,n))/n
-res <- t(apply(doe, 1, fun))
-model <- mkm(doe, res, modelcontrol = list(objectives = 1:2))
-model <- VMPF(model, fun, 40, upper = c(5,3), quiet = FALSE)
-fun <- function(x) Binh(x)[c(1,2)]
-gfun <- function(x) -Binh(x)[-c(1,2)]
-tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(5,3),
-                   constraints = gfun, cdim = 2)$value
-plot(tpf)
-points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
-
-# ----------------
 # The Nowacki Beam
 # ----------------
 n <- 20
@@ -141,16 +67,5 @@ tpf <- mco::nsga2(fun, d, 2, lower.bounds = c(0,0), upper.bounds = c(1,1),
                    constraints = gfun, cdim = 4)$value
 plot(tpf)
 points(ps(model@response[which(model@feasible),model@objective])$set, col = 'blue', pch = 19)
-
-# -----------------------------
-# Fonseca and Fleming function
-# -----------------------------
-n <- 20
-d <- 5 #verificar pq >10 nao funfa
-doe <- replicate(d, sample(0:n,n))/n
-res <- t(apply(doe, 1, tf_ff))
-model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=rep(0.1,d)))
-model <- VMPF(model, tf_ff, 80, quiet = FALSE)
-plot(model@response, pch=19)
 }
 
