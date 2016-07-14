@@ -81,7 +81,7 @@ mkm <- function(design, response, modelcontrol = NULL){
   response <- data.frame(response)
   names(response) <- paste('y',1:ncol(response),sep='.')
 
-  model <- new('mkm')
+  model <- methods::new('mkm')
 
   if (is.null(modelcontrol$objective))
     modelcontrol$objective <- 1:ncol(response)
@@ -119,7 +119,7 @@ mkm <- function(design, response, modelcontrol = NULL){
     modelcontrol$checkNames <- FALSE
 
   if (modelcontrol$quiet)
-    invisible(capture.output(model@km <- apply(response, 2, function(response)
+    invisible(utils::capture.output(model@km <- apply(response, 2, function(response)
       DiceKriging::km(modelcontrol$formula,
                       design,
                       response,
@@ -183,9 +183,11 @@ mkm <- function(design, response, modelcontrol = NULL){
   return(model)
 }
 
+#' @describeIn mkm Custom print for \code{mkm} objects
+#' @param object A \code{mkm} object.
 #' @export
 setMethod("show", signature(object = "mkm"), function(object)
-  print(cbind(object@design, object@response,feasible = object@feasible))
+  base::print(cbind(object@design, object@response,feasible = object@feasible))
 )
 
 #' Predictor for a multiobjective Kriging model
@@ -217,9 +219,9 @@ setMethod("show", signature(object = "mkm"), function(object)
 #' par(mfrow=c(2,3), mar=c(2,2,1,1))
 #' for (i in 1:6){
 #'   contour(matrix((realv[,i]),N), col='red', lty=2, labels='')
-#'   contour(matrix((pred$mean[,i]),N), add=T)
+#'   contour(matrix((pred$mean[,i]),N), add = TRUE)
 #' }
-predict.mkm <- function(object, newdata, modelcontrol = NULL){
+setMethod("predict", c("mkm"), function(object, newdata, modelcontrol = NULL){
   if (is.null(modelcontrol))
     modelcontrol <- object@control
   output.list <- lapply(object@km, function(object)
@@ -241,7 +243,4 @@ predict.mkm <- function(object, newdata, modelcontrol = NULL){
   output$norm_sd <- apply(normalize(output$sd), 1, prod)
   class(output.list) <- 'mpre'
   return(output)
-}
-
-#' @export
-setMethod("predict", c("mkm"), predict.mkm)
+})

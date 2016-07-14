@@ -1,5 +1,5 @@
 list2mkm <- function(list_of_models){ #rever e completar os outros slots
-  model <- new('mkm')
+  model <- methods::new('mkm')
   model@km <- list_of_models
   model@design <- as.data.frame(list_of_models[[1]]@X)
   model@response <- as.data.frame(lapply(list_of_models, function(model) model@y))

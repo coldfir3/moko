@@ -34,7 +34,7 @@ Tchebycheff <- function(y, s=100, rho=0.1){ #add lambda as parameter or someway 
     stop("'rho' must be positive.")
   lambda <- sample(0:s, ncol(y))/s
   lambda <- lambda/sum(lambda)
-  y <- t(moko:::normalize(y))
+  y <- t(normalize(y))
   return((1 - rho) * apply(lambda * y, 2, max) + rho * apply(lambda * y, 2, sum))
 }
 
@@ -256,7 +256,6 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- MEGO(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
-#' rgl::plot3d(ps(model@response)$set)
 #' # ----------------
 #' # Binh
 #' # ----------------
@@ -395,7 +394,7 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
     response <- rbind(response, y_star)
     rownames(response) <- NULL
     if (model@m > 1){
-      s_response <- moko:::Tchebycheff(response[,model@objective],
+      s_response <- Tchebycheff(response[,model@objective],
                                        s=control$s, rho=control$rho)
       s_response <- cbind(s_response, response[,-model@objective])
     }
@@ -413,7 +412,7 @@ MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
       cat('Current iteration:', n, '(elapsed', (proc.time()-time)[3], 'seconds)\n')
       cat('Current design:', round(x_star,3), '\n')
       cat('Current response:', round(y_star[model@objective],3),
-          ifelse(tail(s_model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
+          ifelse(utils::tail(s_model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
     }
   }
   model <- mkm(design, response, model@control)

@@ -4,7 +4,7 @@
 #' multiobjective optimization.
 #'
 #' The main functions provided by \code{moko} are:
-#' pEGO, hEGO and VMFK
+#' MEGO, HEGO and VMFK
 #'
 #' @docType package
 #' @name moko

@@ -12,7 +12,7 @@ EI(x, model, control = NULL)
 \item{model}{An object of class \code{\link{mkm}}.}
 
 \item{control}{An optional list of control parameters, some of them passed to
-the \code{\code{\link[DiceOptim]{EI}}} function. One can control:
+the \code{\link[DiceOptim]{EI}} function. One can control:
   \describe{
    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
    (default: TRUE)}

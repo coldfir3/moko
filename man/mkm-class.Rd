@@ -3,10 +3,21 @@
 \docType{class}
 \name{mkm-class}
 \alias{mkm-class}
+\alias{show,mkm-method}
 \title{An S4 class of multiple Kriging models}
+\usage{
+\S4method{show}{mkm}(object)
+}
+\arguments{
+\item{object}{A \code{mkm} object.}
+}
 \description{
 An S4 class of multiple Kriging models
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{show}: Custom print for \code{mkm} objects
+}}
 \section{Slots}{
 
 \describe{

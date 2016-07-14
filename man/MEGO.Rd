@@ -27,7 +27,7 @@ model@j} where \code{model@m} are the number of objectives and
 \item{quiet}{Logical indicating the verbosity of the routine,}
 
 \item{control}{An optional list of control parameters, some of them passed to
-the \code{\code{\link[DiceOptim]{EI}}} function. One can control:
+the \code{\link[DiceOptim]{EI}} function. One can control:
   \describe{
    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
    (default: TRUE)}
@@ -107,7 +107,6 @@ res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- MEGO(model, fun, 80, quiet = FALSE)
 pairs(ps(model@response)$set)
-rgl::plot3d(ps(model@response)$set)
 # ----------------
 # Binh
 # ----------------

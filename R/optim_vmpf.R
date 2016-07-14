@@ -18,7 +18,8 @@ devtools::use_package("mco")
 #'   \item{\code{mprob}}{(default: \code{15});}
 #'   \item{\code{mdist}}{(defult: \code{20}).}
 #'   }
-#' @inheritParams predict.mkm
+#' @param modelcontrol An optional list of control parameters to the
+#'   \code{mkm} function (default: \code{object@control}).
 #'
 #' @return object of class \code{\link{ps}} containing the predicted Pareto front
 #'
@@ -87,7 +88,7 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
               mdist = control$mdist,
               vectorized = TRUE
               )
-  return(moko:::mco2ps(res))
+  return(mco2ps(res))
 }
 
 #' VMPF: Variance Minimization of the Predicted Front
@@ -173,7 +174,6 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
 #' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- VMPF(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
-#' rgl::plot3d(ps(model@response)$set)
 #'
 #' # ----------------
 #' # Binh
@@ -244,7 +244,7 @@ VMPF <- function(model, fun, nsteps, lower = rep(0,model@d) , upper = rep(1,mode
       cat('Current iteration:', n, '(elapsed', (proc.time()-time)[3], 'seconds)\n')
       cat('Current design:', round(x_star,3),'\n')
       cat('Current response:', round(y_star[model@objective],3),
-          ifelse(tail(model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
+          ifelse(utils::tail(model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
     }
   }
   return(model)

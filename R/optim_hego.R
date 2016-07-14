@@ -25,6 +25,7 @@ devtools::use_package("GPareto")
 #'   }
 #'
 #' @return The Constrained Expected Hypervolume Improvement at \code{x}.
+#'
 #' @export
 #' @examples
 #' # ------------------------
@@ -193,7 +194,6 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 #' model <- HEGO(model, fun, 80, quiet = FALSE)
 #' pairs(ps(model@response)$set)
-#' rgl::plot3d(ps(model@response)$set)
 #' # ----------------
 #' # Binh
 #' # ----------------
@@ -247,7 +247,7 @@ HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, mod
       cat('Current iteration:', n, '(elapsed', (proc.time()-time)[3], 'seconds)\n')
       cat('Current design:', round(x_star,3),'\n')
       cat('Current response:', round(y_star[model@objective],3),
-          ifelse(tail(model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
+          ifelse(utils::tail(model@feasible,1),'(feasible)','(unfeasible)'),'\n\n')
     }
   }
   return(model)

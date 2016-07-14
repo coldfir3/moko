@@ -55,7 +55,7 @@ igd <- function(aps, tps, method = "manhattan", norm = TRUE){
     tps <- normalize(tps)
   }
   n <- nrow(tps)
-  d <- apply(tps, 1, function(point) moko:::pdist(point, aps, method))
+  d <- apply(tps, 1, function(point) pdist(point, aps, method))
   igd <- sum(d)/n
   return(igd)
 }

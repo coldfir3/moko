@@ -1,5 +1,5 @@
-#' @export
-setClass("ps")
+# @export
+#setClass("ps")
 
 devtools::use_package("emoa")
 #' Creates a pareto set from given data

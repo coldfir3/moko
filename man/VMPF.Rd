@@ -107,7 +107,6 @@ res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol=list(lower=rep(0.1,d)))
 model <- VMPF(model, fun, 80, quiet = FALSE)
 pairs(ps(model@response)$set)
-rgl::plot3d(ps(model@response)$set)
 
 # ----------------
 # Binh

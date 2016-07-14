@@ -11,6 +11,6 @@ multiobjective optimization.
 }
 \details{
 The main functions provided by \code{moko} are:
-pEGO, hEGO and VMFK
+MEGO, HEGO and VMFK
 }
 

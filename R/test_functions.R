@@ -47,6 +47,10 @@ nowacki_beam <- function(x,
   return(c(A,S,g1,g2,g3,g4))
 }
 
+#' True pareto front for the nowacki beam problem
+#'
+'nowacki_beam_tps'
+
 #' Test functions for optimization
 #'
 #' This page is a collection of test functions commonly used to test optimization algorithms

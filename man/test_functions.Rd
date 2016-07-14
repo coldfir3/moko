@@ -38,15 +38,15 @@ Shaffer1(0)
 Shaffer2(0)
 
 #function should be evaluated in the -20 < x < 20 interval and \\length(x) >= 1
-Fonseca(seq(0,10))
+Fonseca(rep(0,10))
 
 #function should be evaluated in the -5 < x < 5 interval and \\length(x) == 3
-Kursawe(#' Fonseca(seq(0,3)))
+Kursawe(rep(0,10))
 
 #function should be evaluated in the -3 < x < 3 interval and \\length(x) == 2
 Viennet(c(0.5,0.5))
 
-#function should be evaluated in the 0 < x < [5,3] interval and \\length(x) == 2
+#function should be evaluated in the 0 < x < (5,3) interval and \\length(x) == 2
 Binh(c(0,0))
 }
 \references{
