@@ -3,14 +3,3 @@
 language: R
 sudo: false
 cache: packages
-
-install:
-  - Rscript -e 'install.packages("devtools", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("DiceKriging", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("DiceOptim", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("GenSA", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("emoa", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("mco", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("GPareto", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("testthat", repos = "http://cran.rstudio.com")'
-
