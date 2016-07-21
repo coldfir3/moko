@@ -7,15 +7,14 @@
 igd(aps, tps, method = "manhattan", norm = TRUE)
 }
 \arguments{
-\item{aps}{'ps' object containing the 'actual' pareto front}
+\item{aps}{An object of type \code{\link{ps}} containing the "actual" pareto front}
 
-\item{tps}{'ps' object containing the 'true' pareto front}
+\item{tps}{An object of type \code{\link{ps}} containing the "rue" pareto front}
 
-\item{method}{the distance measure to be used. This must be one of
+\item{method}{String stating which distance measure to be used. This must be one of:
 "euclidean" or "manhattan" (default).}
 
-\item{norm}{Logical indicating if the fronts should be normalized (default =
-TRUE).}
+\item{norm}{Logical indicating if the fronts should be normalized.}
 }
 \value{
 returns the IGD metric
@@ -26,13 +25,13 @@ corresponds to the average distance between all designs in the true set and
 the closest design of the current set. Thus, the lower the IGD value, the
 better the front is.
 }
-\details{
-\deqn{ \text{IGD}(\matx{T},\matx{P}) = \frac{1}{|\matx{T}|} \sum_{\vect{t}
-\in \matx{T}} \text{min}(d(\vect{t} - \vect{p}))_{\vect{p} \in \matx{P}} }{}
-}
 \examples{
 aps <- ps(matrix(rnorm(1:1000),ncol=2))
 tps <- ps(matrix(rnorm(1:2000),ncol=2))
+igd(aps,tps)
+
+tps <-nowacki_beam_tps$set[1:50 * 10,]
+aps <- tps * 1.2
 igd(aps,tps)
 }
 \references{

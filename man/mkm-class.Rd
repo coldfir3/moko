@@ -4,7 +4,7 @@
 \name{mkm-class}
 \alias{mkm-class}
 \alias{show,mkm-method}
-\title{An S4 class of multiple Kriging models}
+\title{A S4 class of multiple Kriging models}
 \usage{
 \S4method{show}{mkm}(object)
 }
@@ -12,7 +12,7 @@
 \item{object}{A \code{mkm} object.}
 }
 \description{
-An S4 class of multiple Kriging models
+A S4 class of multiple Kriging models
 }
 \section{Methods (by generic)}{
 \itemize{

@@ -1,7 +1,7 @@
 devtools::use_package("DiceKriging")
 devtools::use_package("methods")
 
-#' An S4 class of multiple Kriging models
+#' A S4 class of multiple Kriging models
 #'
 #' @slot km A list of \code{\link{km}} objectives.
 #' @slot objective A Numeric vector representing the index of the objective

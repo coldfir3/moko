@@ -5,7 +5,7 @@
 #'
 #' @param point numeric vector
 #' @param set numeric matrix
-#' @param method the distance measure to be used. This must be one of
+#' @param method String stating which distance measure to be used. This must be one of:
 #'   "euclidean" or "manhattan" (default).
 #' @return numeric value indicating the minimum distance between point and set
 pdist <- function(point, set, method = "manhattan"){
@@ -25,18 +25,14 @@ pdist <- function(point, set, method = "manhattan"){
 #' the closest design of the current set. Thus, the lower the IGD value, the
 #' better the front is.
 #'
-#' \deqn{ \text{IGD}(\matx{T},\matx{P}) = \frac{1}{|\matx{T}|} \sum_{\vect{t}
-#' \in \matx{T}} \text{min}(d(\vect{t} - \vect{p}))_{\vect{p} \in \matx{P}} }{}
-#'
 #' @references Shimoyama, K., Jeong, S., & Obayashi, S. (2013, June).
 #'   Kriging-surrogate-based optimization considering expected hypervolume
 #'   improvement in non-constrained many-objective test problems. In 2013 IEEE
 #'   \emph{Congress on Evolutionary Computation} (pp. 658-665). IEEE.
 #'
-#' @param aps 'ps' object containing the 'actual' pareto front
-#' @param tps 'ps' object containing the 'true' pareto front
-#' @param norm Logical indicating if the fronts should be normalized (default =
-#'   TRUE).
+#' @param aps An object of type \code{\link{ps}} containing the "actual" pareto front
+#' @param tps An object of type \code{\link{ps}} containing the "rue" pareto front
+#' @param norm Logical indicating if the fronts should be normalized.
 #' @inheritParams pdist
 #'
 #' @return returns the IGD metric
@@ -45,6 +41,10 @@ pdist <- function(point, set, method = "manhattan"){
 #' aps <- ps(matrix(rnorm(1:1000),ncol=2))
 #' tps <- ps(matrix(rnorm(1:2000),ncol=2))
 #' igd(aps,tps)
+#'
+#' tps <-nowacki_beam_tps$set[1:50 * 10,]
+#' aps <- tps * 1.2
+#' igd(aps,tps)
 igd <- function(aps, tps, method = "manhattan", norm = TRUE){
   if(class(aps) == 'ps')
     aps <- aps$set
@@ -52,8 +52,9 @@ igd <- function(aps, tps, method = "manhattan", norm = TRUE){
     tps <- tps$set
 
   if (norm){
-    aps <- normalize(aps)
-    tps <- normalize(tps)
+    ran <- apply(rbind(aps, tps), 2, range)
+    aps <- normalize(aps, ran)
+    tps <- normalize(tps, ran)
   }
   n <- nrow(tps)
   d <- apply(tps, 1, function(point) pdist(point, aps, method))

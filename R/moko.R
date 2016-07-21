@@ -10,5 +10,6 @@
 #' @name moko
 NULL
 
-
-# R CMD Rd2pdf /c/Dropbox/Adriano/Doutorado/pkg/moko
+# pack <- "moko"
+# path <- find.package(pack)
+# system(paste(shQuote(file.path(R.home("bin"), "R")), "CMD", "Rd2pdf", shQuote(path)))

@@ -11,7 +11,7 @@ pdist(point, set, method = "manhattan")
 
 \item{set}{numeric matrix}
 
-\item{method}{the distance measure to be used. This must be one of
+\item{method}{String stating which distance measure to be used. This must be one of:
 "euclidean" or "manhattan" (default).}
 }
 \value{

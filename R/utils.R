@@ -23,8 +23,9 @@ mco2ps <- function(mco){
   return(ps)
 }
 
-normalize <- function(data){
-  ran <- apply(data, 2, range)
+normalize <- function(data, ran = NULL){
+  if (is.null(ran))
+    ran <- apply(data, 2, range)
   data <- data.frame(t(apply(data, 1, function(data) (data - ran[1,])/(ran[2,]-ran[1,]))))
   return(data)
 } # arrumar problema de NA (divizao por 0 )
