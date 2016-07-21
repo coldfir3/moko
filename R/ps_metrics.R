@@ -25,9 +25,6 @@ pdist <- function(point, set, method = "manhattan"){
 #' the closest design of the current set. Thus, the lower the IGD value, the
 #' better the front is.
 #'
-#' \deqn{ \text{IGD}(\matx{T},\matx{P}) = \frac{1}{|\matx{T}|} \sum_{\vect{t}
-#' \in \matx{T}} \text{min}(d(\vect{t} - \vect{p}))_{\vect{p} \in \matx{P}} }{}
-#'
 #' @references Shimoyama, K., Jeong, S., & Obayashi, S. (2013, June).
 #'   Kriging-surrogate-based optimization considering expected hypervolume
 #'   improvement in non-constrained many-objective test problems. In 2013 IEEE

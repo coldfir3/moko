@@ -3,7 +3,7 @@ devtools::use_package("mco")
 #'
 #' This function creates a predicted pareto front based on the mean of Kriging
 #' models. The predicted mean of each objective and constraint is passed to the
-#' \code{\link[nsga2R]{nsga2R}} algorithm that.
+#' \code{\link[mco]{nsga2R}} algorithm that.
 #'
 #' @param model Object of class \code{\link{mkm}}.
 #' @param lower Vector of lower bounds for the variables to be optimized over

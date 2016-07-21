@@ -26,10 +26,6 @@ corresponds to the average distance between all designs in the true set and
 the closest design of the current set. Thus, the lower the IGD value, the
 better the front is.
 }
-\details{
-\deqn{ \text{IGD}(\matx{T},\matx{P}) = \frac{1}{|\matx{T}|} \sum_{\vect{t}
-\in \matx{T}} \text{min}(d(\vect{t} - \vect{p}))_{\vect{p} \in \matx{P}} }{}
-}
 \examples{
 aps <- ps(matrix(rnorm(1:1000),ncol=2))
 tps <- ps(matrix(rnorm(1:2000),ncol=2))
