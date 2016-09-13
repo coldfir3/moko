@@ -4,27 +4,41 @@ devtools::use_package("GPareto")
 #' Multi-objective Expected Hypervolume Improvement with respect to the current
 #' Pareto front. It's based on the \code{\link{crit_EHI}} function of the
 #' \code{\link{GPareto}} package. However, the present implementation accounts
-#' for inequalty constrains embeded into a \code{mkm} model.
+#' for inequalty constrains embeded into the \code{mkm} model.
+#'
+#' The way that the constraints are handled are based on the probability of
+#' feasibility. The strong assumption here is that the cost functions and the
+#' constraints are uncorrelated. With that assumption in mind, a simple
+#' closed-form solution can be derived that consists in the product of the
+#' probability that each constraint will be met and the expected improvemen of
+#' the objective.
 #'
 #' @inheritParams GPareto::crit_EHI
 #' @param model An object of class \code{\link{mkm}}.
 #' @param control An optional list of control parameters, some of them passed to
 #'   the \code{\link[GPareto]{crit_EHI}} function. One can control:
 #'   \describe{
-#'   \item{\code{minimization}}{logical indicating if the EHVI is minimizing
-#'   all objectives (\code{TRUE}, by default) or maximizing all objectives
-#'   (\code{FALSE}). Mixed information not currently accepted, if the user needs
-#'   so, it should invert the functions prior Kriging modeling}
-#'   \item{\code{paretoFront}}{object of class \code{\link{ps}} containing
-#'   the actual Pareto set. If not provided a Pareto set is built based
-#'    on the current observations of \code{model}.}
-#'   \item{\code{nb.samp}}{default: 50}
-#'   \item{\code{seed}}{default: 42}
-#'   \item{\code{refPoint}}{default: \code{min} or \code{max} values for the Pareto
-#'    front for each objective}
-#'   }
+#'   \item{\code{minimization}}{logical indicating if the EHVI is minimizing all
+#'   objectives (\code{TRUE}, by default) or maximizing all objectives
+#'   (\code{FALSE}). Mixed optimization is not currently accepted, if the user
+#'   needs it, the cost functions should be modified prior Kriging modeling
+#'   (i.e. inverting or mutilpying the optut by \code{-1}).}
+#'   \item{\code{paretoFront}}{object of class \code{\link{ps}} containing the
+#'   actual Pareto set. If not provided a Pareto set is built based on the
+#'   current feasible observations (\code{model@response[model@feasible,]}).}
+#'   \item{\code{nb.samp}}{number of random samples from the posterior distribution
+#'    (with more than two objectives), default to 50, increasing gives more reliable
+#'     results at the cost of longer computation time}
+#'   \item{\code{seed}}{seed used for the random samples (with more than two objectives);}
+#'   \item{\code{refPoint}}{reference point for Hypervolume Expected Improvement.
+#'    If not provided, it is set to the maximum or minimum of each objective.}
+#'    }
 #'
-#' @return The Constrained Expected Hypervolume Improvement at \code{x}.
+#' @return The constrained expected hypervolume improvement at \code{x}.
+#'
+#' @references Forrester, A., Sobester, A., & Keane, A. (2008).
+#'   \emph{Engineering design via surrogate modelling: a practical guide.} John
+#'   Wiley & Sons.
 #'
 #' @export
 #' @examples
@@ -87,7 +101,7 @@ devtools::use_package("GenSA")
 #' @inheritParams EHVI
 #' @param optimcontrol Optional list of control parameters passed to the
 #'   \code{\link[GenSA]{GenSA}} function. Please, note that the values are passed as
-#'   the \code{control} parameter inside the \code{GenSA} function.
+#'   the \code{control} parameter inside the \code{GenSA} function (\code{genSA(control = optimcontrol)}).
 #' @param lower Vector of lower bounds for the variables to be optimized over
 #'   (default: 0 with length \code{model@d}),
 #' @param upper Vector of upper bounds for the variables to be optimized over

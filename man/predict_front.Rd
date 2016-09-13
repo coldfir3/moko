@@ -33,7 +33,7 @@ object of class \code{\link{ps}} containing the predicted Pareto front
 \description{
 This function creates a predicted pareto front based on the mean of Kriging
 models. The predicted mean of each objective and constraint is passed to the
-\code{\link[mco]{nsga2}} algorithm that.
+\code{\link[mco]{nsga2}} algorithm that builds .
 }
 \examples{
 # ------------------------

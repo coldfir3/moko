@@ -41,10 +41,10 @@ Tchebycheff <- function(y, s=100, rho=0.1){ #add lambda as parameter or someway 
 devtools::use_package("DiceOptim")
 #' Constrained Expected Emprovement
 #'
-#' This functions extends the \code{\link[DiceOptim]{EI}} function suplyied by the package
-#' \code{\link{DiceOptim}}. The enxtension allows to the usage of multiple
-#' expensive constraints. The constraints must be passed to the EI function
-#' embedded in the \code{\link{mkm}} object. Currently low-cost (explicit)
+#' This functions extends the \code{\link[DiceOptim]{EI}} function supplied by the package
+#' \code{\link{DiceOptim}}. This enxtension allows usage of multiple
+#' expensive constraints. The constraints are passed to the revamped EI function
+#' embedded inside the \code{\link{mkm}} object. Currently low-cost (explicit)
 #' constraints are not allowed.
 #'
 #' The way that the constraints are handled are based on the probability of
@@ -57,17 +57,18 @@ devtools::use_package("DiceOptim")
 #' \emph{feasible} observed value.
 #'
 #' @param x A vector representing the input for which one wishes to calculate EI.
-#' @param model An object of class \code{\link{mkm}}.
+#' @param model An object of class \code{\link{mkm}}. This \code{model} must have a single
+#'  objective (\code{model@m == 1}).
 #' @param control An optional list of control parameters, some of them passed to
 #' the \code{\link[DiceOptim]{EI}} function. One can control:
 #'   \describe{
 #'    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
-#'    (default: TRUE)}
+#'    (default: \code{TRUE})}
 #'    \item{\code{plugin}}{optional scalar, if not provided, the minimum (or maximum) of the current
 #'     feasible observations. If there isn't any feasible design plugin is set to \code{NA} and the
 #'     algorithm returns the value of the probabilty of constraints be met.}
 #'    \item{\code{envir}}{optional enviroment specifying where to assign intermediate values.
-#'     Default is NULL.}
+#'     Default: \code{NULL}.}
 #'   }
 #'
 #' @references Forrester, A., Sobester, A., & Keane, A. (2008).
@@ -140,11 +141,11 @@ devtools::use_package("GenSA")
 #' @inheritParams EI
 #' @param optimcontrol Optional list of control parameters passed to the
 #'   \code{\link[GenSA]{GenSA}} function. Please, note that the values are
-#'   passed as the \code{control} parameter inside the \code{GenSA} function.
+#'   passed as the \code{control} parameter inside the \code{GenSA} function (\code{genSA(control = optimcontrol)}).
 #' @param lower Vector of lower bounds for the variables to be optimized over
-#'   (default: 0 with length \code{model@d}),
+#'   (default: 0 with length = \code{model@d}),
 #' @param upper Vector of upper bounds for the variables to be optimized over
-#'   (default: 1 with length \code{model@d}),
+#'   (default: 1 with length = \code{model@d}),
 #' @return A list with components: \describe{
 #'  \item{\code{par}}{The best set of parameters found.}
 #'  \item{\code{value}}{The value of expected hypervolume improvement at par.}
@@ -189,6 +190,9 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' points plus the points visited during all previous iterations; then a new
 #' point is obtained by maximizing the Constrained Expected Improvement
 #' criterion (EI).
+#'
+#' Note that since MEGO is works by scalarizing a cost function, this technique
+#' is well suited for single objective problems with multiple constraints.
 #'
 #' @param fun The multi-objective and constraint cost function to be optimized.
 #'   This function must return a vector with the size of \code{model@m +
@@ -238,7 +242,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- DiceKriging::branin
 #' res <- apply(doe, 1, fun)
 #' model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d)))
-#' model <- MEGO(model, fun, 20, quiet = FALSE)
+#' model <- MEGO(model, fun, 10, quiet = FALSE)
 #' contour(x.grid,y.grid,z.grid,40)
 #' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' # ---------------------------------------
@@ -293,7 +297,7 @@ max_EI <- function(model, lower = rep(0,model@d), upper = rep(1,model@d),
 #' fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
-#' model <- MEGO(model, fun, 20, quiet = FALSE)
+#' model <- MEGO(model, fun, 10, quiet = FALSE)
 #' contour(x.grid,y.grid,z.grid,40)
 #' points(model@design, col=ifelse(model@feasible,'blue','red'))
 MEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,

@@ -43,22 +43,22 @@ setClass('mkm', representation(
 #' @param modelcontrol An optional list of control parameters passed to the
 #'   \code{\link{km}} function. One can control:
 #'   \describe{
-#'   \item{\code{objective}}{default: \code{1:ncol(response)}}
-#'   \item{\code{quiet}}{default: \code{TRUE}}
-#'   \item{\code{formula}}{default: \code{~1}}
-#'   \item{\code{covtype}}{default: \code{"matern5_2"}}
-#'   \item{\code{nugget.estim}}{default: \code{FALSE}}
-#'   \item{\code{estim.method}}{default: \code{"MLE"}}
-#'   \item{\code{optim.method}}{default: \code{"BFGS"}}
-#'   \item{\code{multistart}}{default: \code{1}}
-#'   \item{\code{gr}}{default: \code{TRUE}}
-#'   \item{\code{iso}}{default: \code{FALSE}}
-#'   \item{\code{scaling}}{default: \code{FALSE}}
-#'   \item{\code{type}}{default: \code{'UK'}}
-#'   \item{\code{se.compute}}{default: \code{TRUE}}
-#'   \item{\code{light.return}}{default: \code{TRUE}}
-#'   \item{\code{bias.correct}}{default: \code{FALSE}}
-#'   \item{\code{checkNames}}{default: \code{FALSE}}
+#'   \item{\code{objective}}{(default: \code{1:ncol(response)})}
+#'   \item{\code{quiet}}{(default: \code{TRUE})}
+#'   \item{\code{formula}}{(default: \code{~1})}
+#'   \item{\code{covtype}}{(default: \code{"matern5_2"})}
+#'   \item{\code{nugget.estim}}{(default: \code{FALSE})}
+#'   \item{\code{estim.method}}{(default: \code{"MLE"})}
+#'   \item{\code{optim.method}}{(default: \code{"BFGS"})}
+#'   \item{\code{multistart}}{(default: \code{1})}
+#'   \item{\code{gr}}{(default: \code{TRUE})}
+#'   \item{\code{iso}}{(default: \code{FALSE})}
+#'   \item{\code{scaling}}{(default: \code{FALSE})}
+#'   \item{\code{type}}{(default: \code{'UK'})}
+#'   \item{\code{se.compute}}{(default: \code{TRUE})}
+#'   \item{\code{light.return}}{(default: \code{TRUE})}
+#'   \item{\code{bias.correct}}{(default: \code{FALSE})}
+#'   \item{\code{checkNames}}{(default: \code{FALSE})}
 #'   }
 #'   For more details, one can check \code{\link{km}}.
 #'

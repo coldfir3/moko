@@ -9,25 +9,26 @@ EI(x, model, control = NULL)
 \arguments{
 \item{x}{A vector representing the input for which one wishes to calculate EI.}
 
-\item{model}{An object of class \code{\link{mkm}}.}
+\item{model}{An object of class \code{\link{mkm}}. This \code{model} must have a single
+objective (\code{model@m == 1}).}
 
 \item{control}{An optional list of control parameters, some of them passed to
 the \code{\link[DiceOptim]{EI}} function. One can control:
   \describe{
    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
-   (default: TRUE)}
+   (default: \code{TRUE})}
    \item{\code{plugin}}{optional scalar, if not provided, the minimum (or maximum) of the current
     feasible observations. If there isn't any feasible design plugin is set to \code{NA} and the
     algorithm returns the value of the probabilty of constraints be met.}
    \item{\code{envir}}{optional enviroment specifying where to assign intermediate values.
-    Default is NULL.}
+    Default: \code{NULL}.}
   }}
 }
 \description{
-This functions extends the \code{\link[DiceOptim]{EI}} function suplyied by the package
-\code{\link{DiceOptim}}. The enxtension allows to the usage of multiple
-expensive constraints. The constraints must be passed to the EI function
-embedded in the \code{\link{mkm}} object. Currently low-cost (explicit)
+This functions extends the \code{\link[DiceOptim]{EI}} function supplied by the package
+\code{\link{DiceOptim}}. This enxtension allows usage of multiple
+expensive constraints. The constraints are passed to the revamped EI function
+embedded inside the \code{\link{mkm}} object. Currently low-cost (explicit)
 constraints are not allowed.
 }
 \details{

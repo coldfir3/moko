@@ -8,29 +8,30 @@ max_EI(model, lower = rep(0, model@d), upper = rep(1, model@d),
   control = NULL, optimcontrol = NULL)
 }
 \arguments{
-\item{model}{An object of class \code{\link{mkm}}.}
+\item{model}{An object of class \code{\link{mkm}}. This \code{model} must have a single
+objective (\code{model@m == 1}).}
 
 \item{lower}{Vector of lower bounds for the variables to be optimized over
-(default: 0 with length \code{model@d}),}
+(default: 0 with length = \code{model@d}),}
 
 \item{upper}{Vector of upper bounds for the variables to be optimized over
-(default: 1 with length \code{model@d}),}
+(default: 1 with length = \code{model@d}),}
 
 \item{control}{An optional list of control parameters, some of them passed to
 the \code{\link[DiceOptim]{EI}} function. One can control:
   \describe{
    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
-   (default: TRUE)}
+   (default: \code{TRUE})}
    \item{\code{plugin}}{optional scalar, if not provided, the minimum (or maximum) of the current
     feasible observations. If there isn't any feasible design plugin is set to \code{NA} and the
     algorithm returns the value of the probabilty of constraints be met.}
    \item{\code{envir}}{optional enviroment specifying where to assign intermediate values.
-    Default is NULL.}
+    Default: \code{NULL}.}
   }}
 
 \item{optimcontrol}{Optional list of control parameters passed to the
 \code{\link[GenSA]{GenSA}} function. Please, note that the values are
-passed as the \code{control} parameter inside the \code{GenSA} function.}
+passed as the \code{control} parameter inside the \code{GenSA} function (\code{genSA(control = optimcontrol)}).}
 }
 \value{
 A list with components: \describe{

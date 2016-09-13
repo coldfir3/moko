@@ -7,7 +7,7 @@
 #' @param set numeric matrix
 #' @param method String stating which distance measure to be used. This must be one of:
 #'   "euclidean" or "manhattan" (default).
-#' @return numeric value indicating the minimum distance between point and set
+#' @return numeric value indicating the minimum distance between \code{point} and \code{set}.
 pdist <- function(point, set, method = "manhattan"){
   point <- t(as.matrix(point))
   dif <- t(apply(set, 1, function(set) set-point))
@@ -31,8 +31,8 @@ pdist <- function(point, set, method = "manhattan"){
 #'   \emph{Congress on Evolutionary Computation} (pp. 658-665). IEEE.
 #'
 #' @param aps An object of type \code{\link{ps}} containing the "actual" pareto front
-#' @param tps An object of type \code{\link{ps}} containing the "rue" pareto front
-#' @param norm Logical indicating if the fronts should be normalized.
+#' @param tps An object of type \code{\link{ps}} containing the "true" pareto front
+#' @param norm Logical (default: \code{TRUE}) indicating if both fronts should be normalized.
 #' @inheritParams pdist
 #'
 #' @return returns the IGD metric

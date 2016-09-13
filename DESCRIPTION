@@ -22,5 +22,6 @@ URL: http://github.com/coldfir3/moko
 BugReports: http://github.com/coldfir3/moko/issues
 Suggests: testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    lhs
 VignetteBuilder: knitr

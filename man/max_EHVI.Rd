@@ -19,22 +19,25 @@ max_EHVI(model, lower = rep(0, model@d), upper = rep(1, model@d),
 \item{control}{An optional list of control parameters, some of them passed to
 the \code{\link[GPareto]{crit_EHI}} function. One can control:
 \describe{
-\item{\code{minimization}}{logical indicating if the EHVI is minimizing
-all objectives (\code{TRUE}, by default) or maximizing all objectives
-(\code{FALSE}). Mixed information not currently accepted, if the user needs
-so, it should invert the functions prior Kriging modeling}
-\item{\code{paretoFront}}{object of class \code{\link{ps}} containing
-the actual Pareto set. If not provided a Pareto set is built based
- on the current observations of \code{model}.}
-\item{\code{nb.samp}}{default: 50}
-\item{\code{seed}}{default: 42}
-\item{\code{refPoint}}{default: \code{min} or \code{max} values for the Pareto
- front for each objective}
-}}
+\item{\code{minimization}}{logical indicating if the EHVI is minimizing all
+objectives (\code{TRUE}, by default) or maximizing all objectives
+(\code{FALSE}). Mixed optimization is not currently accepted, if the user
+needs it, the cost functions should be modified prior Kriging modeling
+(i.e. inverting or mutilpying the optut by \code{-1}).}
+\item{\code{paretoFront}}{object of class \code{\link{ps}} containing the
+actual Pareto set. If not provided a Pareto set is built based on the
+current feasible observations (\code{model@response[model@feasible,]}).}
+\item{\code{nb.samp}}{number of random samples from the posterior distribution
+ (with more than two objectives), default to 50, increasing gives more reliable
+  results at the cost of longer computation time}
+\item{\code{seed}}{seed used for the random samples (with more than two objectives);}
+\item{\code{refPoint}}{reference point for Hypervolume Expected Improvement.
+ If not provided, it is set to the maximum or minimum of each objective.}
+ }}
 
 \item{optimcontrol}{Optional list of control parameters passed to the
 \code{\link[GenSA]{GenSA}} function. Please, note that the values are passed as
-the \code{control} parameter inside the \code{GenSA} function.}
+the \code{control} parameter inside the \code{GenSA} function (\code{genSA(control = optimcontrol)}).}
 }
 \value{
 A list with components:

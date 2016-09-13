@@ -9,7 +9,8 @@ MEGO(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d),
   quiet = TRUE, control = NULL, optimcontrol = NULL)
 }
 \arguments{
-\item{model}{An object of class \code{\link{mkm}}.}
+\item{model}{An object of class \code{\link{mkm}}. This \code{model} must have a single
+objective (\code{model@m == 1}).}
 
 \item{fun}{The multi-objective and constraint cost function to be optimized.
 This function must return a vector with the size of \code{model@m +
@@ -19,10 +20,10 @@ model@j} where \code{model@m} are the number of objectives and
 \item{nsteps}{An integer representing the desired number of iterations,}
 
 \item{lower}{Vector of lower bounds for the variables to be optimized over
-(default: 0 with length \code{model@d}),}
+(default: 0 with length = \code{model@d}),}
 
 \item{upper}{Vector of upper bounds for the variables to be optimized over
-(default: 1 with length \code{model@d}),}
+(default: 1 with length = \code{model@d}),}
 
 \item{quiet}{Logical indicating the verbosity of the routine,}
 
@@ -30,17 +31,17 @@ model@j} where \code{model@m} are the number of objectives and
 the \code{\link[DiceOptim]{EI}} function. One can control:
   \describe{
    \item{\code{minimization}}{logical specifying if EI is used in minimiziation or in maximization
-   (default: TRUE)}
+   (default: \code{TRUE})}
    \item{\code{plugin}}{optional scalar, if not provided, the minimum (or maximum) of the current
     feasible observations. If there isn't any feasible design plugin is set to \code{NA} and the
     algorithm returns the value of the probabilty of constraints be met.}
    \item{\code{envir}}{optional enviroment specifying where to assign intermediate values.
-    Default is NULL.}
+    Default: \code{NULL}.}
   }}
 
 \item{optimcontrol}{Optional list of control parameters passed to the
 \code{\link[GenSA]{GenSA}} function. Please, note that the values are
-passed as the \code{control} parameter inside the \code{GenSA} function.}
+passed as the \code{control} parameter inside the \code{GenSA} function (\code{genSA(control = optimcontrol)}).}
 }
 \value{
 updated \code{\link{mkm}} model
@@ -52,6 +53,10 @@ Executes \code{nsteps} iterations of the MEGO method to an object of class
 points plus the points visited during all previous iterations; then a new
 point is obtained by maximizing the Constrained Expected Improvement
 criterion (EI).
+}
+\details{
+Note that since MEGO is works by scalarizing a cost function, this technique
+is well suited for single objective problems with multiple constraints.
 }
 \examples{
 # ----------------
@@ -86,7 +91,7 @@ doe <- replicate(d,sample(0:n,n))/n
 fun <- DiceKriging::branin
 res <- apply(doe, 1, fun)
 model <- mkm(doe, res, modelcontrol = list(lower=rep(0.1,d)))
-model <- MEGO(model, fun, 20, quiet = FALSE)
+model <- MEGO(model, fun, 10, quiet = FALSE)
 contour(x.grid,y.grid,z.grid,40)
 points(model@design, col=ifelse(model@feasible,'blue','red'))
 # ---------------------------------------
@@ -141,7 +146,7 @@ fun_cntr <- function(x) 1.6 - Griewank(x*10-5)
 fun <- function(x) return(c(fun_cost(x),fun_cntr(x)))
 res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
-model <- MEGO(model, fun, 20, quiet = FALSE)
+model <- MEGO(model, fun, 10, quiet = FALSE)
 contour(x.grid,y.grid,z.grid,40)
 points(model@design, col=ifelse(model@feasible,'blue','red'))
 }

@@ -9,12 +9,12 @@ igd(aps, tps, method = "manhattan", norm = TRUE)
 \arguments{
 \item{aps}{An object of type \code{\link{ps}} containing the "actual" pareto front}
 
-\item{tps}{An object of type \code{\link{ps}} containing the "rue" pareto front}
+\item{tps}{An object of type \code{\link{ps}} containing the "true" pareto front}
 
 \item{method}{String stating which distance measure to be used. This must be one of:
 "euclidean" or "manhattan" (default).}
 
-\item{norm}{Logical indicating if the fronts should be normalized.}
+\item{norm}{Logical (default: \code{TRUE}) indicating if both fronts should be normalized.}
 }
 \value{
 returns the IGD metric

@@ -11,7 +11,7 @@
 #'
 #' @param x vector of length 2 correspon the normalized beath and height of the
 #'   beam
-#' @param g vector of lenght 4 containing the limit of each constraint
+#' @param g vector of lenght 5 containing the upper limits of each constraint
 #' @param l numeric length of the beam
 #' @param F numeric force applied at the beam tip
 #' @param E numeric elastic longitudinal moduli
@@ -25,7 +25,7 @@
 #'
 #' nowacki_beam(c(0.5,0.5))
 nowacki_beam <- function(x,
-                         g = c(5, 240, 120, 10),
+                         g = c(5, 240, 120, 10, 2),
                          l = 1500, F = 5000,
                          E = 216620, G = 86650, v = 0.27,
                          box = data.frame(b = c(10, 50),h = c(20, 250))){
@@ -35,6 +35,7 @@ nowacki_beam <- function(x,
 
   Iy <- b*h^3/12
   Iz <- b^3*h/12
+  It <- Iy + Iz
   J <- Iy + Iz
 
   A <- b*h
@@ -43,8 +44,9 @@ nowacki_beam <- function(x,
   g2 <- S - g[2]
   g3 <- 3*F/(2*b*h) - g[3]
   g4 <- h/b - g[4]
+  g5 <- - 4/(l^2) * sqrt(G * It * E * Iz/(1-v^2)) + g[5] * F
 
-  return(c(A,S,g1,g2,g3,g4))
+  return(c(A,S,g1,g2,g3,g4,g5))
 }
 
 #' True pareto front for the nowacki beam problem

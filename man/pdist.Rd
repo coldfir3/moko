@@ -15,7 +15,7 @@ pdist(point, set, method = "manhattan")
 "euclidean" or "manhattan" (default).}
 }
 \value{
-numeric value indicating the minimum distance between point and set
+numeric value indicating the minimum distance between \code{point} and \code{set}.
 }
 \description{
 This function computes and returns the minimum distance between a vector and
