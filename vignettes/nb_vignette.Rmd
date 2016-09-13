@@ -2,7 +2,7 @@
 title: "Multiobjective Optimization of the Nowacki Beam"
 author: "Adriano G. Passos"
 date: '`r Sys.Date()`'
-output: html_document
+output: pdf_document
 bibliography: nb_vignette.bib
 vignette: |
   %\VignetteIndexEntry{Multiobjective Optimization of the Nowacki Beam} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
@@ -38,7 +38,7 @@ The basic idea of the EI criterion is that by sampling a new point $\mathbf{x^\s
 The EGO algorithm can be easily imported to a multiobjective framework by creating a combined function of the qualities [@knowles2006parego]. The constrains of the optimization problem can be considered simply by building independent metamodels for each constraint and multiplying the EI of the composed objective function by the probability of each constraint to be met [@sasena2002exploration]. The MEGO algorithm can be summarized as follows:
 
   1. Generate an initial DOE $\mathbf{X}$ using an optimized *Latin hypercube*;
-  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=f_{(1 \ldots m)}(\mathbf{x})$ and $\mathbf{g}=g_{(1 \ldots p)}(\mathbf{x})$ for the $m$-objectives and $p$-constraints.
+  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=[f_1,f_2,\ldots,f_m]^T$ and $\mathbf{g}=[g_1,g_2,\ldots,g_p]^T$ for the $m$-objectives and $p$-constraints.
 	1. **while** computational budget not exhausted **do**:
     a. Normalize the responses to fit in a hypercube of size $[0,1]^m$;
     a. For each $\mathbf{x} \in \mathbf{X}$ Compute a scalar quality by making $f_{\mathbf{\lambda}} = \underset{i=1}{\overset{m}{\text{max}}}(\lambda_i f_i) + \rho \sum^m_{(i=1)}\lambda_i f_i$, where $\mathbf{\lambda}$ is drawn uniformly at random from a set of evenly distributed unit vectors and $\rho$ is an arbitrary small value which we set to $0.05$;
@@ -54,7 +54,7 @@ Here, the EI is computed using a custom modified version of the functions provid
 For comparison, the expected hypervolume improvement (EHVI) is used as infill criterion. The EHVI is based on the theory of the hypervolume indicator [@zitzler1998multiobjective], a metric of dominance of non-dominated solutions have. This metric consists in the size of the hypervolume fronted by the non-dominated set bounded by reference maximum points. I that sense, the EHVI is the expected improvement at the hypervolume size we would get by sampling a new point $\mathbf{x^\star}$. Here, the EHVI is computed using the R package `GPareto` [@GPareto]. The EHVI function provided by this package do not account for constrains so a custom modification had to be implemented. The algorithm used here is similar to the MEGO and can be summarized as follows:
 
   1. Generate an initial DOE $\mathbf{X}$ using an optimized *Latin hypercube*;
-  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=f_{(1 \ldots m)}(\mathbf{x})$ and $\mathbf{g}=g_{(1 \ldots p)}(\mathbf{x})$ for the $m$-objectives and $p$-constraints.
+  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=[f_1,f_2,\ldots,f_m]^T$ and $\mathbf{g}=[g_1,g_2,\ldots,g_p]^T$ for the $m$-objectives and $p$-constraints.
   1. **while** computational budget not exhausted **do**:
     a. Normalize the responses to fit a hypercube of size $[0,1]^m$;
     a. For each of the $m$-objectives and $p$-constraints, build a Kriging model;
@@ -70,7 +70,7 @@ For this and the previous approach, the algorithm used to maximize the infill cr
 The proposed framework, VMKF, is based on the iterative improvement of the predicted Pareto set fidelity. Here, the idea is, from a given initial set of Kriging models (one for each cost or constraint function), to build a Pareto front using the predictor's mean of each model as input functions. From the estimated front $\mathbf{P}$, the design with higher variance $\mathbf{x}^\star$ (i.e.: most isolated on the decision space) have it's "true" value evaluated using the high fidelity models. A new set of Kriging models are then rebuilt and the process repeats until a stopping criteria is met. The proposed algorithm can be summarized as follows:
 
   1. Generate an initial DOE $\mathbf{X}$ using an optimized *Latin hypercube*;
-  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=f_{(1 \ldots m)}(\mathbf{x})$ and $\mathbf{g}=g_{(1 \ldots p)}(\mathbf{x})$ for the $m$-objectives and $p$-constraints.
+  1. Evaluate $\mathbf{X}$ using high-fidelity models and store responses of $\mathbf{f}=[f_1,f_2,\ldots,f_m]^T$ and $\mathbf{g}=[g_1,g_2,\ldots,g_p]^T$ for the $m$-objectives and $p$-constraints.
   1. **while** computational budget not exhausted **do**:
     a. For each of the $m$-objectives and $p$-constraints, build a Kriging model;
     a. Generate a Pareto set $\mathbf{P}$ using the mean predictor of the Kriging models using a state-of-art multiobjective optimization algorithm (such as NSGA-II);
@@ -84,27 +84,28 @@ Here, the NSGA-II implementation used is the one provided by the `R` package `mc
 
 However Kriging-based optimization is more useful for costly black box optimization problems, here we will demonstrate the technique using an analytic function for didactic proposes.
 
-in the well known Nowacking beam optimization problem [@nowacki1980modelling], the aim is to design a tip loaded cantilever beam for minimum cross-sectional area and bending stress. The beam length is $l=1500\;\text{mm}$ and at is subject to a tip load force of $F=5000\;\text{N}$. The cross-section of the beam is rectangular, with breadth $b$ and height $h$, which are the design variables. The design is constrained by 5 requisites and the optimization problem can be formally defined as the following:
+in the well known Nowacki beam optimization problem [@nowacki1980modelling], the aim is to design a tip loaded cantilever beam for minimum cross-sectional area and bending stress. The beam length is $l=1500\;\text{mm}$ and at is subject to a tip load force of $F=5000\;\text{N}$. The cross-section of the beam is rectangular, with breadth $b$ and height $h$, which are the design variables. The design is constrained by 5 requisites and the optimization problem can be formally defined as the following:
 
 $$
 \begin{aligned}
-    \text{find:}            &\: \{b, h\}, \nonumber\\
-    \text{where:}           &\:  \{20 \leq h \leq 250\}, \nonumber\\ 
-    \text{and:}             &\: \{10 \leq b \leq 50\},  \nonumber\\ 
+  \text{find:}            &\: \{b, h\}, \nonumber\\
+  \text{where:}           &\: \{20 \leq h \leq 250\}, \nonumber\\ 
+  \text{and:}             &\: \{10 \leq b \leq 50\},  \nonumber\\ 
 	\text{to minimize A:}   &\: A = b\,h \nonumber\\
 	\text{and minimize B:}  &\: \sigma = \frac{6Fl}{b^2h}, \nonumber\\
 	\text{subject to 1:}    &\: \delta = \frac{12Fl^3}{Ebh^3} \leq 5,  \\
 	\text{subject to 2:}    &\: \sigma = \frac{6Fl}{b^2h} \leq 240,  \nonumber\\
 	\text{subject to 3:}    &\: \tau = \frac{3F}{2bh} \leq 120,  \nonumber\\
 	\text{subject to 4:}    &\: \text{AR} = \frac{h}{b} \leq 10,  \nonumber\\
-	\text{subject to 5:}    &\: F_\text{crit} = -\frac{4}{l^2}\sqrt{G\frac{(b^3h+hb^3)}{12}E\frac{b^3h}{12}\frac{1}{(1-v^2)}} \leq -2F, \nonumber
+	\text{subject to 5:}    &\: F_\text{crit} = -\frac{4}{l^2}\sqrt{G\frac{(b^3h+hb^3)}{12}E\frac{b^3h}{12}\frac{1}{(1-v^2)}} \leq -2 F. \nonumber
 \end{aligned}
 $$
-where $E$ and $G$ are the longitudinal and the transverse Young's moduli of the material, respectively and $\nu$ is the Poisson's ration. All values are physically interpreted on the unit system $[\text{mm}$, $\text{N}$, $\text{MPa}]$.
+
+The material used on the original problem is a mild steel with a yield stress of $\sigma_Y = 240 \text{MPa}$, Young's modulus $E = 216.62 \text{GPa}$, Poisson ratio $\nu = 0.27$ and shear modulus calculated as $G = 86.65 \text{GPa}$. For consistency, all values are physically interpreted on the unit system $[\text{mm}$, $\text{N}$, $\text{MPa}]$.
 
 ## Quality Metric
 
-The quality of the Pareto sets found are compared using the inverted generational distance (IGD) metric [@shimoyama2013kriging]. The IGD can be defined as
+Here, the quality of the Pareto sets found are compared using the inverted generational distance (IGD) metric [@shimoyama2013kriging]. The IGD can be defined as
 $$
     \text{IGD}(\mathbf{T},\mathbf{P}) = \frac{1}{|\mathbf{T}|} \sum_{\mathbf{t} \in \mathbf{T}} \text{min}(d(\mathbf{t} - \mathbf{p}))_{\mathbf{p} \in \mathbf{P}},
 $$
@@ -113,8 +114,8 @@ where $\mathbf{T}$ and $\mathbf{P}$ are the true and the current Pareto sets, $|
 ```{r, fig.width=4, fig.height=4, fig.align='center', echo=FALSE}
 library(moko)
 true_ps <- nowacki_beam_tps
-par(mar=c(3,2.5,0.5,0.5)+0.1,mgp = c(1.5, 0.75, 0))
-plot(true_ps$set, pch=20, xlab='Area', ylab='Bending Stress', col='blue', cex=0.2)
+par(mar=c(3,2.5,0.5,0.5)+0.1, mgp = c(1.75, 0.5, 0))
+plot(true_ps$set, pch=20, xlab = expression(paste("Area [mm"^"2"*"]")), ylab='Bending Stress [MPa]', col='blue', cex=0.2)
 ```
 
 ## Methodology
@@ -124,24 +125,52 @@ First we load the `moko` package and the `lhs` package that we will use here for
 library(moko)
 library(lhs)
 ```
-After loading the necessary packages, we generate an initial DOE using an optimized Latin hypercube of `n` samples and two dimmensions.
+After loading the necessary packages, we generate an initial DOE using an optimized Latin hypercube of `n = 20` samples in two dimensions (`d = 2`) by doing:
 ```{r}
-n <- 20
-d <- 2
+n = 20
+d = 2
+set.seed(18)
 doe <- optimumLHS(n,d)
+```
+The `seed` is arbitrary set to 100 so we can achieve reproducibility. This is how our sample looks:
+```{r, fig.width=4, fig.height=4, fig.align='center', echo=FALSE}
+par(mar=c(3,2.5,0.5,0.5)+0.1, mgp = c(1.75, 0.5, 0))
+plot(doe, pch=19, xlab = "normalized breadth", ylab='normalized height')
 ```
 Now, we load the Nowacki beam function and compute the output.
 ```{r}
 fun <- nowacki_beam
 res <- t(apply(doe, 1, fun))
 ```
-Then, we create a multi-objective kriging model calling the function `mkm`. Note that we need to tune the `modelcontrol` argument in order to tell the function that our data have two objectives. By doing that, the remaining columns of the response will be flagged as constraints. Also, in order to increas stability, we set the lower bounds for the kriging hyperparameter estimation as `0.1` for all variables (for more information check the *Identifiability issues caused by large design interdistances* section of [@roustant2012dicekriging])
+The `res` object consists in a numeric matrix with 20 lines and 7 columns:
+```{r, echo=FALSE}
+print(round(res,3))
+```
+Each line of this matrix is a single design where the two first columns are the outputs that we need to maximize and the remaining columns are the constraints values. Any value that is grater than zero does not meet the constraint so the design is unfeasible. Note that, on this case, only the samples number 1, 4, 7, 8, 11, 12, 14, 18 and 20 are feasible. I does not matter right now, but we will check that latter, after fitting the model.
+
+Now, we can create a multi-objective kriging model by calling the function `mkm`. Note that we need to setup the `modelcontrol` argument in order to tell the function that our data have two objectives. By doing that, the remaining columns of the response will be flagged as constraints. Also, in order to increase stability, we set the lower bounds for the kriging hyperparameter estimation as `0.1` for all variables (for more information check the *Identifiability issues caused by large design interdistances* section of [@roustant2012dicekriging])
 ```{r}
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1, d)))
 ```
-Now that we executed step 1 and 2 of any of the 3 optimization techniques presented here, we will apply the VMPF algorithm on the initial model to demonstrate how to handle the `mkm` object.
+The `model`is an `S4` objects with some usefull slots. For example, one can check which designs are feasible by simply calling:
+```{r}
+which(model@feasible)
+```
+which returns the index of the feasible designs. Furthermore, one can get the feasible designs themselves by calling:
+```{r}
+model@design[model@feasible,]
+```
+or the responses associated with those feasible designs with:
+```{r}
+model@response[model@feasible,]
+```
+One can even filter only the feasible designs objective's by:
+```{r}
+model@response[model@feasible,model@objective]
+```
+This is only a small number of operations that can be done by using the slots of the `mkm` model. More details on the slots can be found on the help using `?'mkm-class'`.
 
-Considering a total budget of 40 evaluations (which 20 were already spent building the initial model) we can code the technique as follows:
+Now that we executed steps 1 and 2 for all optimization techniques presented here, we will apply the VMPF algorithm on the initial model to demonstrate how to handle the `mkm` object. Considering a total budget of 40 evaluations (which 20 were already spent building the initial model) we can code the technique as follows:
 ```{r}
 for (i in 21:40){
   pred_ps <- predict_front(model, lower = rep(0,d), upper = rep(1,d))
@@ -161,13 +190,13 @@ print(igd(actual_ps, true_ps))
 ```
 Now we can visualize the actual Pareto front and check how good it is against the true front.
 ```{r, fig.width=4, fig.height=4, fig.align='center', echo=FALSE}
-par(mar=c(3,2.5,0.5,0.5)+0.1,mgp = c(1.5, 0.75, 0))
-plot(true_ps$set, pch=20, xlab='Area', ylab='Bending Stress', col='blue', cex=0.2)
+par(mar=c(3,2.5,0.5,0.5)+0.1, mgp = c(1.75, 0.5, 0))
+plot(true_ps$set, pch=20, xlab= expression(paste("Area [mm"^"2"*"]")), ylab='Bending Stress [MPa]', col='blue', cex=0.2)
 points(model@response, col = ifelse(model@feasible, 'black', 'red'), pch=19)
 points(actual_ps$set, col = 'green')
 ```
 
-Alternatively, one can use the `VMPF` function and save some coding lines. This funcion is basicly a wraper for the demonstraded algorithm, it recives the number of iterations and a `mkm` model as input and returns the updated model. There are also wrappers for the other two algorthms that can be used as follows:
+Alternatively, one can use the `VMPF` function and save some coding lines. This function is basically a wrapper for the demonstrated algorithm, it receives a `mkm` model as input and returns the updated model after `niter` iterations. There are also wrappers for the other two algorithms that could be used as follows:
 ```r
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1, d)))
 niter <- 20

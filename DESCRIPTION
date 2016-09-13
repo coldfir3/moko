@@ -2,7 +2,9 @@ Package: moko
 Type: Package
 Title: MOKO: Multi-Objective Kriging Optimization
 Version: 0.0.0.9000
-Authors@R: person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre"))
+Authors@R: c(
+  person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")),
+  person("Marco", "Luersen", email="luersen@utfpr.edu.br", role="ctb"))
 Description: The package moko provides the user with methods for
   constrained and unconstraiend multiobjective optimization. Those
   methods are all based on the Kriging surogate modeling technique.
