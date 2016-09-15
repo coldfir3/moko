@@ -1,6 +1,6 @@
 Package: moko
 Type: Package
-Title: MOKO: Multi-Objective Kriging Optimization
+Title: Multi-Objective Kriging Optimization
 Version: 1.0.0
 Authors@R: c(
   person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")),

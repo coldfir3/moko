@@ -4,8 +4,10 @@ author: "Adriano G. Passos"
 date: '`r Sys.Date()`'
 output: pdf_document
 bibliography: nb_vignette.bib
-vignette: |
-  %\VignetteIndexEntry{Multiobjective Optimization of the Nowacki Beam} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+vignette: >
+  %\VignetteIndexEntry{Multiobjective Optimization of the Nowacki Beam}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 ---
 
 In this paper, the well known multiobjective optimization problem: The Nowacki beam is solved. here, three different frameworks for dealing with many-objective problems using Kriging surrogate models are compared:
