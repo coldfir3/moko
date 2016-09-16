@@ -165,7 +165,7 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-#' model <- HEGO(model, fun, nsteps, quiet = FALSE, control = list(rho = 0.1))
+#' model <- HEGO(model, fun, nsteps, quiet = FALSE)
 #' plot(nowacki_beam_tps$set)
 #' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,
