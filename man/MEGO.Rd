@@ -64,18 +64,20 @@ is well suited for single objective problems with multiple constraints.
 # ----------------
 n <- 20
 d <- 2
+nsteps <- 1 # value has been set to 1 to save compliation time, change this value to 40.
 fun <- nowacki_beam
 doe <- replicate(d,sample(0:n,n))/n
 res <- t(apply(doe, 1, fun))
 model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-model <- MEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+model <- MEGO(model, fun, nsteps, quiet = FALSE, control = list(rho = 0.1))
 plot(nowacki_beam_tps$set)
 points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 
 ############################################
 #### some single objective optimization ####
 ############################################
-
+\dontrun{
+## Those examples are flagged as "don't run" only to save compilation time. ##
 n.grid <- 20
 x.grid <- y.grid <- seq(0,1,length=n.grid)
 design.grid <- expand.grid(x.grid, y.grid)
@@ -149,6 +151,7 @@ model <- mkm(doe, res, modelcontrol = list(objective = 1, lower=c(0.1,0.1)))
 model <- MEGO(model, fun, 10, quiet = FALSE)
 contour(x.grid,y.grid,z.grid,40)
 points(model@design, col=ifelse(model@feasible,'blue','red'))
+}
 }
 \references{
 Knowles, J. (2006). ParEGO: a hybrid algorithm with on-line

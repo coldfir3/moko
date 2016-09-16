@@ -19,8 +19,8 @@ Imports:
     GPareto (>= 1.0.2),
     methods (>= 3.0.0)
 RoxygenNote: 5.0.1
-URL: http://github.com/coldfir3/moko
-BugReports: http://github.com/coldfir3/moko/issues
+URL: https://github.com/coldfir3/moko
+BugReports: https://github.com/coldfir3/moko/issues
 Suggests: testthat,
     knitr,
     rmarkdown,
