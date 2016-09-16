@@ -45,15 +45,14 @@ devtools::use_package("GPareto")
 #' # ------------------------
 #' # The Nowacki Beam
 #' # ------------------------
-#' n <- 50
+#' n <- 20
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
-#' res <- t(apply(doe, 1, nowacki_beam))
+#' res <- t(apply(doe, 1, nowacki_beam, box = data.frame(b = c(10, 50), h = c(50, 250))))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=rep(0.1,d)))
-#' grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
-#' ### this computation may take some time ###
+#' grid <- expand.grid(seq(0, 1, , 20),seq(0, 1, , 20))
 #' ehvi <- apply(grid, 1, EHVI, model)
-#' contour(matrix(ehvi, 50))
+#' contour(matrix(ehvi, 20))
 #' points(model@design, col=ifelse(model@feasible,'blue','red'))
 #' points(grid[which.max(ehvi),], col='green', pch=19)
 EHVI <- function(x, model, control = NULL){
@@ -120,7 +119,7 @@ devtools::use_package("GenSA")
 #' n <- 20
 #' d <- 2
 #' doe <- replicate(d,sample(0:n,n))/n
-#' res <- t(apply(doe, 1, nowacki_beam))
+#' res <- t(apply(doe, 1, nowacki_beam, box = data.frame(b = c(10, 50), h = c(50, 250))))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower=c(0.1,0.1)))
 #' max_EHVI(model)
 max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
@@ -161,11 +160,12 @@ max_EHVI <- function(model, lower = rep(0, model@d), upper = rep(1, model@d),
 #' # ----------------
 #' n <- 20
 #' d <- 2
+#' nsteps <- 1 # value has been set to 1 to save compliation time, change this value to 40.
 #' fun <- nowacki_beam
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))
 #' model <- mkm(doe, res, modelcontrol = list(objective = 1:2, lower = rep(0.1,d)))
-#' model <- HEGO(model, fun, 20, quiet = FALSE, control = list(rho = 0.1))
+#' model <- HEGO(model, fun, nsteps, quiet = FALSE, control = list(rho = 0.1))
 #' plot(nowacki_beam_tps$set)
 #' points(ps(model@response[which(model@feasible),model@objective])$set, col = 'green', pch = 19)
 HEGO <- function(model, fun, nsteps, lower = rep(0, model@d), upper = rep(1, model@d), quiet = TRUE,

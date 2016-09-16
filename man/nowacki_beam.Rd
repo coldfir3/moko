@@ -38,7 +38,11 @@ subject to a number of constraints.
 }
 \examples{
 
-nowacki_beam(c(0.5,0.5))
+grid <- expand.grid(seq(0, 1, , 50),seq(0, 1, , 50))
+res <- apply(grid, 1, nowacki_beam, box = data.frame(b = c(10, 50), h = c(50, 250)))
+par(mfrow = c(3,3))
+for(i in 1:nrow(res))
+ contour(matrix(res[i,],50))
 }
 \references{
 Forrester, A., Sobester, A., & Keane, A. (2008).
