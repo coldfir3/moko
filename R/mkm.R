@@ -1,5 +1,5 @@
-devtools::use_package("DiceKriging")
-devtools::use_package("methods")
+#devtools::use_package("DiceKriging")
+#devtools::use_package("methods")
 
 #' A S4 class of multiple Kriging models
 #'

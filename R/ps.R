@@ -1,7 +1,7 @@
 # @export
 #setClass("ps")
 
-devtools::use_package("emoa")
+#devtools::use_package("emoa")
 #' Creates a pareto set from given data
 #'
 #' Return those points which are not dominated by another point in \code{y} This

@@ -1,4 +1,4 @@
-devtools::use_package("mco")
+#devtools::use_package("mco")
 #' Predicted Pareto front
 #'
 #' This function creates a predicted pareto front based on the mean of Kriging
@@ -123,7 +123,7 @@ predict_front <- function(model, lower, upper, control = NULL, modelcontrol = NU
 #' # ----------------
 #' n <- 20
 #' d <- 2
-#' nsteps <- 5 # value has been set to 1 to save compliation time, change this value to 40.
+#' nsteps <- 2 # value has been set to 2 to save compliation time, change this value to 40.
 #' fun <- nowacki_beam
 #' doe <- replicate(d,sample(0:n,n))/n
 #' res <- t(apply(doe, 1, fun))

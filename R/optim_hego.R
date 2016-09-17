@@ -1,4 +1,4 @@
-devtools::use_package("GPareto")
+#devtools::use_package("GPareto")
 #' EHVI: Constrained Expected Hypervolume Improvement
 #'
 #' Multi-objective Expected Hypervolume Improvement with respect to the current
@@ -89,7 +89,7 @@ EHVI <- function(x, model, control = NULL){
   return(ehvi*probg)
 }
 
-devtools::use_package("GenSA")
+#devtools::use_package("GenSA")
 #' max_EHVI: Maximization of the Expected Hypervolume Improvement criterion
 #'
 #' Given an object of class \code{\link{mkm}} and a set of tuning parameters,

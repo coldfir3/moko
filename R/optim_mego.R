@@ -38,7 +38,7 @@ Tchebycheff <- function(y, s=100, rho=0.1){ #add lambda as parameter or someway 
   return((1 - rho) * apply(lambda * y, 2, max) + rho * apply(lambda * y, 2, sum))
 }
 
-devtools::use_package("DiceOptim")
+#devtools::use_package("DiceOptim")
 #' Constrained Expected Emprovement
 #'
 #' This functions extends the \code{\link[DiceOptim]{EI}} function supplied by the package
@@ -130,7 +130,7 @@ EI <- function(x, model, control = NULL){
   return(ei*probg)
 }
 
-devtools::use_package("GenSA")
+#devtools::use_package("GenSA")
 #' max_EI: Maximization of the Constrained Expected Improvement criterion
 #'
 #' Given an object of class \code{\link{mkm}} and a set of tuning parameters,
